@@ -1,0 +1,5 @@
+2021-04-15 16:30:41,531 - instagram_scraper.app - WARNING - Retry after exception HTTPError('429 Client Error: - for url: https://www.instagram.com/p/CNfVbFVCVg8/?__a=1') on https://www.instagram.com/p/CNfVbFVCVg8/?__a=1
+2021-04-15 16:30:46,725 - instagram_scraper.app - WARNING - Retry after exception HTTPError('429 Client Error: - for url: https://www.instagram.com/p/CNfVbFVCVg8/?__a=1') on https://www.instagram.com/p/CNfVbFVCVg8/?__a=1
+2021-04-15 16:30:56,936 - instagram_scraper.app - WARNING - Retry after exception HTTPError('429 Client Error: - for url: https://www.instagram.com/p/CNfVbFVCVg8/?__a=1') on https://www.instagram.com/p/CNfVbFVCVg8/?__a=1
+2021-04-15 16:31:17,266 - instagram_scraper.app - WARNING - Retry after exception HTTPError('429 Client Error: - for url: https://www.instagram.com/p/CNfVbFVCVg8/?__a=1') on https://www.instagram.com/p/CNfVbFVCVg8/?__a=1
+2021-04-15 16:31:57,677 - instagram_scraper.app - WARNING - Retry after exception HTTPError('429 Client Error: - for url: https://www.instagram.com/p/CNfVbFVCVg8/?__a=1') on https://www.instagram.com/p/CNfVbFVCVg8/?__a=1

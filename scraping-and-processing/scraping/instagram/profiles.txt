@@ -1,0 +1,15 @@
+# hr3
+# bayerischer_rundfunk
+# mdr_th
+# mdr_san
+# mdr_sn
+# wdr2
+# tagesschau
+# welt
+# spiegelmagazin
+ndr2
+ndrhamburg
+ndrniedersachsen
+swraktuell
+swr3online
+# faz 
