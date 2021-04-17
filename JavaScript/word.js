@@ -65,6 +65,10 @@ class Word {
       }
     }
 
+    this.deleteWord = function() {
+      World.remove(world, this.body)
+    }
+
     /**
      * Diese Funktion wird im draw()-Loop aufgerufen und zeichnet das Wort
      * @param {*} x Position

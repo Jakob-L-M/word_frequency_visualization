@@ -55,12 +55,20 @@ function keyPressed() {
     else if (keyCode === DOWN_ARROW) {
         boxes[0].decreaseWeight(0.02);
     }
+    // k
     else if (keyCode == 75) {
         console.log(data['days'][0]);
         var words = data['days'][0]['words'];
         var weights = data['days'][0]['weights'];
         createWords(words, weights, mouseX, mouseY);
     }
+    // l
+    else if (keyCode == 76) {
+        const index = 0;
+        boxes[index].deleteWord();
+        boxes.splice(0, 1);
+    }
+    // n
     else if (keyCode == 78) {
         currentDay = (currentDay + 1) % data['days'].length;
         skipToDay(currentDay);
