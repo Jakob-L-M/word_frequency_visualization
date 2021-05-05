@@ -11,7 +11,7 @@ var boxes = [];
 var center;
 var ball;
 var gravityPull = 0.000012;
-var sketchSize = window.innerWidth*window.innerHeight/6;
+var sketchSize = window.innerWidth * window.innerHeight / 12;
 var currentDay = 0;
 
 function setup() {
@@ -19,7 +19,7 @@ function setup() {
     engine = Engine.create();
 
     world = engine.world;
-    
+
     world.gravity.x = 0;
     world.gravity.y = 0;
     world.gravity.isPoint = true;
@@ -29,8 +29,8 @@ function setup() {
         isStatic: true,
         friction: 1,
         restitution: 0,
-        width:width,
-        height:height
+        width: width,
+        height: height
     };
     // center = Bodies.rectangle(window.innerWidth/2, window.innerHeight/2, 100, 100, options);
 
@@ -70,13 +70,13 @@ function keyPressed() {
     }
     // n
     else if (keyCode == 78) {
-        currentDay = (currentDay + 1) % data['days'].length;
+        currentDay = (currentDay + 1)
         skipToDay(currentDay);
     }
 }
 
 function preload() {
-    data = loadJSON("data.json");
+    data = loadJSON("visual_data.json");
 }
 
 function draw() {
@@ -84,24 +84,62 @@ function draw() {
     background(29);
 
     Engine.update(engine);
-    
+
     for (var i = 0; i < boxes.length; i++) {
         Body.applyForce(boxes[i].body, boxes[i].body.position, {
-        x: (window.innerWidth/2 - boxes[i].body.position.x) * gravityPull,
-        y: (window.innerHeight/2 - boxes[i].body.position.y) * gravityPull
+            x: (window.innerWidth / 2 - boxes[i].body.position.x) * gravityPull,
+            y: (window.innerHeight / 2 - boxes[i].body.position.y) * gravityPull
         });
         boxes[i].show();
     }
 }
 
 function skipToDay(day) {
-    newData = data['days'][day]
-    for (var i = 0; i < newData['words'].length; i++) {
-        if (boxes.includes(newData['words'][i])) {
-            boxes[boxes.indexOf(newData['words'][i])].updateWeight(newData['weights'][i]);
+    newData = data[day]
+    currentWords = new Array(boxes.length);
+
+    // fill word array
+    for (var j = 0; j < boxes.length; j++) {
+        currentWords[j] = boxes[j].t
+    }
+
+    console.log(newData)
+    // iterate  current boxes
+    for (var j = 0; j < boxes.length; j++) {
+        
+        // if the word is already present in the word cloud -> ignore
+        console.log(newData['words'].includes(boxes[j].t))
+        if (newData['words'].includes(boxes[j].t)) {
+            continue
         }
+        
+        // if the word is in boxes array but not in newData
+        // -> Remove word from boxes
         else {
-            console.log(newData['words'][i])
+            // Remove physics
+            boxes[j].deleteWord();
+            // Remove redering
+            boxes.splice(j, 1);
+            // Remove from currentWords
+            currentWords.splice(j, 1);
+            // adjust pointer
+            j -= 1;
+        }
+    }
+    // iterate words
+    for (var i = 0; i < newData['words'].length; i++) {
+
+        // only add new word, if its not already present
+        // otherwise update the weight
+        if (currentWords.indexOf(newData['words'][i]) >= 0) {
+            boxes[currentWords.indexOf(newData['words'][i])].updateWeight(newData['weights'][i]);
+        } else {
+            let r = 375
+            let phi = random(0,2*Math.PI)
+            console.log(phi)
+            x = window.innerWidth/2 - 1.5 * r * cos(phi)
+            y = window.innerHeight/2 + 1 * r * sin(phi)
+            boxes.push(new Word(x, y, newData['words'][i], newData['weights'][i]));
         }
     }
 }
@@ -116,4 +154,4 @@ async function createWords(words, weights, posX, posY) {
 // Sleep Function
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
-  }
+}

@@ -22,6 +22,7 @@ class Word {
     this.ratio = getSizeOfText(t, 'Times New Roman', 1); // ratio = width/height
     this.h = Math.sqrt(sketchSize*this.g*(1/this.ratio)); // fontsize | 1pt ~ 4/3px
     this.w = getSizeOfText(t, 'Times New Roman', this.h) * 1.1; // 10% extra
+    this.t = t;
 
     // Der Body des Worts, welcher in der Physics Engine verwendet wird
     this.body = Bodies.rectangle(x, y, this.w, this.h, options);
