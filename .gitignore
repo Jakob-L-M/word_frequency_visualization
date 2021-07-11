@@ -2,3 +2,5 @@
 corona_data/
 *.pdf
 *.jpg
+scraping-and-processing/processing/tweet_frame.csv
+JavaScript/vis.json
