@@ -17,8 +17,8 @@ function make_arc(id, days) {
   return d3.arc()
   .innerRadius(innerRadius)
   .outerRadius(innerRadius + line_width)
-  .startAngle(day_to_radians(days.start_day)) //converting from degs to radians
-  .endAngle(day_to_radians(days.end_day))
+  .startAngle(day_to_radians(days[0])) //converting from degs to radians
+  .endAngle(day_to_radians(days[1]))
 }
 
 function handleMouseOver(mouse_event, data) {
@@ -38,7 +38,7 @@ const vis = d3.select('#graph')
 
 const g = vis.append("g").attr("transform", `translate(${width/2}, ${height/2})`)
 
-$.getJSON("vis.json", function(data) {
+$.getJSON("main.json", function(data) {
   console.log(data)
   for (let i = 0; i < data.length; i++) {
     for (let j = 0; j < data[i].days.length; j++) {

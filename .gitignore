@@ -4,3 +4,4 @@ corona_data/
 *.jpg
 scraping-and-processing/processing/tweet_frame.csv
 JavaScript/vis.json
+JavaScript/main.json
