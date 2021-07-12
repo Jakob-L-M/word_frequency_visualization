@@ -25,6 +25,26 @@ function make_arc(id, days) {
   .endAngle(day_to_radians(days[1]))
 }
 
+function get_color(i, n) {
+  //colors from color pallet
+  let c1 = [209, 232, 226] // [0, 1/2)
+  let c2 = [46, 156, 202] // 
+  let c3 = [41, 100, 138] // [1/2, 1]
+
+  let pos = i/n // intervall [0, 1]
+
+  if(pos < 1/2) {
+    pos *= 2
+    return [Math.round((1-pos)*c1[0] + pos*c2[0]), Math.round((1-pos)*c1[1] + pos*c2[1]), Math.round((1-pos)*c1[2] + pos*c2[2])]
+  } else {
+    pos = (pos*2)-1
+    return [Math.round((1-pos)*c2[0] + pos*c3[0]), Math.round((1-pos)*c2[1] + pos*c3[1]), Math.round((1-pos)*c2[2] + pos*c3[2])]
+  }
+}
+
+function color_to_hex(c_arr) {
+  return `#${c_arr[0].toString(16)}${c_arr[1].toString(16)}${c_arr[2].toString(16)}`
+}
 
 function handleMouseOver(mouse_event, data) {
   console.log(data)
@@ -58,6 +78,7 @@ $.getJSON("../data/main.json", function(data) {
         .data([appendix])
         .attr("d", make_arc(i, data[i].days[j]))
         .attr("class", String(data[i].word)) //make sure no number gets set as class
+        .attr("fill", color_to_hex(get_color(i,n)))
         .on("mouseover", handleMouseOver)
         .on("mouseout", handleMouseOut)
     }
