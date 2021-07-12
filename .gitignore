@@ -1,7 +1,4 @@
 *tmp*/*
-corona_data/
-*.pdf
-*.jpg
-scraping-and-processing/processing/tweet_frame.csv
-JavaScript/vis.json
-JavaScript/main.json
+data/
+orga_files/
+desktop.ini
