@@ -50,6 +50,8 @@ function color_to_hex(c_arr) {
 function handleMouseOver(mouse_event, data) {
   // #15DB95 accent color from pallet
   d3.selectAll(`.${mouse_event.target.classList.value}`).style('fill', '#15DB95')
+  console.log(data)
+  document.getElementById("word_lable").innerHTML = data.data.word
 }
 
 function handleMouseOut(mouse_event, data) {
@@ -72,7 +74,7 @@ $.getJSON("../data/main.json", function(data) {
   for (let i = 0; i < n; i++) {
     for (let j = 0; j < data[i].days.length; j++) {
       // to satisfy d3 syntax this has to be done
-      let appendix = {'color': color_to_hex(get_color(i,n))}
+      let appendix = {'color': color_to_hex(get_color(i,n)), 'data': data[i]}
       g.append("path")
         .data([appendix])
         .attr("d", make_arc(i, data[i].days[j]))

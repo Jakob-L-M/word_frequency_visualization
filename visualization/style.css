@@ -13,3 +13,13 @@ body {
     height: 75%;
     width: 47%;
 }
+
+#word_lable {
+    position: absolute;
+    top: 10%;
+    left: 60%;
+    width: 30%;
+    font-size: xx-large;
+    color:rgb(255, 182, 72);
+    text-align: center;
+}
