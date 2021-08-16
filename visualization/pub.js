@@ -1,6 +1,6 @@
 let loaded_data;
 
-const angle_gap = 0;
+const angle_gap = 20;
 const rotation_angle = 0*(Math.PI)/180;
 const inner_offset = 25;
 
@@ -22,13 +22,31 @@ function day_to_radians(day) {
 }
 
 function make_arc(id, days) {
+
+  // if days end before the interval or begin after the intervall
+  if(days[1] <= start_day || days[0] >= end_day) {
+    return null
+  }
+
   let innerRadius = inner_offset + (line_width + line_gap) * id;
   
-  return d3.arc()
-  .innerRadius(innerRadius)
-  .outerRadius(innerRadius + line_width)
-  .startAngle(day_to_radians(days[0]) + rotation_angle) //converting from degs to radians
-  .endAngle(day_to_radians(days[1]) + rotation_angle)
+  let arc = d3.arc()
+    .innerRadius(innerRadius)
+    .outerRadius(innerRadius + line_width)
+
+  if(start_day < days[0]) {
+    arc.startAngle(day_to_radians(days[0]) + rotation_angle)
+  } else {
+    arc.startAngle(day_to_radians(start_day) + rotation_angle)
+  }
+
+  if(end_day > days[1]) {
+    arc.endAngle(day_to_radians(days[1]) + rotation_angle)
+  } else {
+    arc.endAngle(day_to_radians(end_day) + rotation_angle)
+  }
+
+  return arc
 }
 
 function get_color(i, n) {
