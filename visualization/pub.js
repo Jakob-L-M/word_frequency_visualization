@@ -1,8 +1,12 @@
-const angle_gap = 10;
+let loaded_data;
+
+const angle_gap = 0;
 const rotation_angle = 0*(Math.PI)/180;
 const inner_offset = 25;
 
 var line_width, line_gap;
+
+const category = 'corona'
 
 const width = document.getElementById('graph').clientWidth;
 const height = document.getElementById('graph').clientHeight;
@@ -10,7 +14,7 @@ const center = Math.min(width/2, height/2)
 
 var start_day = 0;
 // needs to be extracted from meta-data
-var end_day = 456;
+var end_day = 45;
 
 function day_to_radians(day) {
   let result = angle_gap / 2 + (360 - angle_gap) * day / end_day; // relativ day in degrees with the angle_gap subtracted. Day 0 will be mapped to angle_gap/2 aka the start of the circle.
@@ -67,12 +71,15 @@ const vis = d3.select('#graph')
 
 const g = vis.append("g").attr("transform", `translate(${width/2}, ${height/2})`)
 
-$.getJSON("../data/main.json", function(data) {
+$.getJSON(`../data/${category}/main.json`, function(data) {
+
+  loaded_data = data;
+
   // store length of data - equal to the number of different words
-  n = 60 // hardcoded um Sachen zu testen :D max: 148 bzw data.length
+  n = 8 // hardcoded um Sachen zu testen :D max: 148 bzw data.length
   line_width = (center - inner_offset)*0.8/n
   line_gap = line_width*0.25
-  skip_rings = Math.ceil(n/15) // number of rings where no dotted line should be drawn
+  skip_rings = Math.ceil(n/25) // number of rings where no dotted line should be drawn
   let j = 1; // Variable to ensure we get a maximum of 100 lines
   
   // dotted lines
@@ -87,6 +94,12 @@ $.getJSON("../data/main.json", function(data) {
         .attr("stroke-dasharray", `${line_gap}, ${(line_width+line_gap)*skip_rings-line_gap}`)
         .attr("class", "graph_line");
       j = 1;
+      g.append("text")
+        .attr("x", Math.sin(angle)*center)
+        .attr("y", -Math.cos(angle)*center)
+        .attr("text-anchor", "middle")
+        .attr("dominant-baseline", "central")
+        .text("A")
     } else {
       j++;
     }
