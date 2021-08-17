@@ -82,27 +82,16 @@ function color_to_hex(c_arr) {
   return `#${c_arr[0].toString(16)}${c_arr[1].toString(16)}${c_arr[2].toString(16)}`
 }
 
-function handleMouseOver(mouse_event, data) {
-  // #15DB95 accent color from pallet
-  d3.selectAll(`.${mouse_event.target.classList.value}`).style('fill', '#15DB95')
-}
-
-function handleMouseOut(mouse_event, data) {
-  d3.selectAll(`.${mouse_event.target.classList.value}`).style('fill', data.color)
-}
-
-function handleMouseClick(mouse_event, data) {
-  document.getElementById("word_lable").innerHTML = data.data.word
-}
-
 const vis = d3.select('#graph')
-.append('svg')
-.attr('id', 'svg')
-.attr("width", "100%")
-.attr("height", "100%");
+  .append('svg')
+  .attr('id', 'svg')
+  .attr("width", "100%")
+  .attr("height", "100%");
 
-const g = vis.append("g").attr("transform", `translate(${width/2}, ${height/2})`)
+const g = vis.append("g").attr("transform", `translate(${width/2}, ${height/2})`);
 
+
+// main creation
 $.getJSON(`../data/${category}/main.json`, function(data) {
 
   loaded_data = data;
