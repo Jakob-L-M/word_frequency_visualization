@@ -15,14 +15,14 @@ body {
     top: 3%;
     left: 3%;
     height: 75%;
-    width: 47%;
+    width: 57%;
 }
 
 #word_lable {
     position: absolute;
     top: 10%;
-    left: 60%;
-    width: 30%;
+    left: 70%;
+    width: 20%;
     font-size: xx-large;
     color:rgb(255, 182, 72);
     text-align: center;

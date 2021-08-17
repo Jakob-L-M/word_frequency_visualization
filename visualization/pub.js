@@ -10,11 +10,17 @@ const category = 'corona'
 
 const width = document.getElementById('graph').clientWidth;
 const height = document.getElementById('graph').clientHeight;
-const center = Math.min(width/2, height/2)
 
-var start_day = 20;
+// scaling by .85 to leave space for labeling
+const center = Math.min(width/2, height/2)*0.9
+
 // needs to be extracted from meta-data
-var end_day = 155;
+var start_day = 0;
+var end_day = 450;
+const start_date = "2020-01-08"; // YYYY-MM-DD
+
+const start_timestamp = Date.parse(start_date)
+
 var total_days = end_day - start_day
 
 function day_to_radians(day) {
@@ -67,6 +73,11 @@ function get_color(i, n) {
   }
 }
 
+function get_date(i) {
+  let date_str = new Date(i*86400000 + start_timestamp).toDateString()
+  return date_str.substr(8,2) + date_str.substr(3,4) + date_str.substr(10,5)
+}
+
 function color_to_hex(c_arr) {
   return `#${c_arr[0].toString(16)}${c_arr[1].toString(16)}${c_arr[2].toString(16)}`
 }
@@ -95,30 +106,37 @@ $.getJSON(`../data/${category}/main.json`, function(data) {
   loaded_data = data;
 
   // store length of data - equal to the number of different words
-  n = 8 // hardcoded um Sachen zu testen :D max: 148 bzw data.length
-  line_width = (center - inner_offset)*0.8/n
+  n = 25 // hardcoded um Sachen zu testen :D max: 148 bzw data.length
+  line_width = (center - 2*inner_offset)*0.8/n
   line_gap = line_width*0.25
   skip_rings = Math.ceil(n/25) // number of rings where no dotted line should be drawn
+  
   let j = 1; // Variable to ensure we get a maximum of 100 lines
   
   // dotted lines
   for (let i = 0; i <= total_days; i++) {
     if(total_days/j < 100) {
+
       let angle = (((360-angle_gap) * (i-0.5)/total_days + angle_gap/2)*(Math.PI)/180)
+
+      let outer_x = Math.sin(angle)*center;
+      let outer_y = -Math.cos(angle)*center;
+
       g.append("line")
         .attr("x1", Math.sin(angle)*(inner_offset+2.375*line_width+2*line_gap))     // x position of the first end of the line
         .attr("y1", -Math.cos(angle)*(inner_offset+2.375*line_width+2*line_gap))      // y position of the first end of the line
-        .attr("x2", Math.sin(angle)*center)     // x position of the second end of the line
-        .attr("y2", -Math.cos(angle)*center)
+        .attr("x2", outer_x - Math.sin(angle)*line_width)     // x position of the second end of the line
+        .attr("y2", outer_y + Math.cos(angle)*line_width)
         .attr("stroke-dasharray", `${line_gap}, ${(line_width+line_gap)*skip_rings-line_gap}`)
         .attr("class", "graph_line");
       j = 1;
       g.append("text")
-        .attr("x", Math.sin(angle)*center)
-        .attr("y", -Math.cos(angle)*center)
         .attr("text-anchor", "middle")
         .attr("dominant-baseline", "central")
-        .text("A")
+        .attr("transform", `translate(${outer_x},${outer_y})rotate(${270 + angle*180/Math.PI})`)
+        .style('fill', '#ffb648') // orange from pallet
+        .style("font-size", `${center/25}`)
+        .text(`${get_date(i)}`);
     } else {
       j++;
     }
