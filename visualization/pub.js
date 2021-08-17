@@ -85,12 +85,14 @@ function color_to_hex(c_arr) {
 function handleMouseOver(mouse_event, data) {
   // #15DB95 accent color from pallet
   d3.selectAll(`.${mouse_event.target.classList.value}`).style('fill', '#15DB95')
-  console.log(data)
-  document.getElementById("word_lable").innerHTML = data.data.word
 }
 
 function handleMouseOut(mouse_event, data) {
   d3.selectAll(`.${mouse_event.target.classList.value}`).style('fill', data.color)
+}
+
+function handleMouseClick(mouse_event, data) {
+  document.getElementById("word_lable").innerHTML = data.data.word
 }
 
 const vis = d3.select('#graph')
@@ -165,6 +167,7 @@ $.getJSON(`../data/${category}/main.json`, function(data) {
         .attr("fill", appendix.color)
         .on("mouseover", handleMouseOver)
         .on("mouseout", handleMouseOut)
+        .on("click", handleMouseClick)
     }
   if(!changed) {
     console.log(i)
