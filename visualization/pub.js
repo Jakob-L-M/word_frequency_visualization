@@ -134,9 +134,9 @@ $.getJSON(`../data/${category}/main.json`, function(data) {
         .attr("text-anchor", "middle")
         .attr("dominant-baseline", "central")
         .attr("transform", `translate(${outer_x},${outer_y})rotate(${270 + angle*180/Math.PI})`)
-        .style('fill', '#ffb648') // orange from pallet
         .style("font-size", `${center/25}`)
-        .text(`${get_date(i)}`);
+        .text(`${get_date(i)}`)
+        .attr("class", "graph_date");
     } else {
       j++;
     }

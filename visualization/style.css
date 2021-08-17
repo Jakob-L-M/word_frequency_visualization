@@ -10,11 +10,16 @@ body {
     stroke: rgb(255, 182, 72);
 }
 
+.graph_date {
+    fill: #ffb648;
+    font-family: 'VT323', monospace;
+}
+
 #graph {
     position: absolute;
     top: 3%;
     left: 3%;
-    height: 75%;
+    height: 80%;
     width: 57%;
 }
 
