@@ -49,24 +49,24 @@ body {
 }
 #details #appearance #a_first{
     position: absolute;
-    top: 0%;
+    top: 30%;
     left: 0%;
     width: 33%;
-    height: 100%;
+    height: 70%;
 }
 #details #appearance #a_most{
     position: absolute;
     top: 0%;
     left: 33%;
     width: 33%;
-    height: 100%;
+    height: 70%;
 }
 #details #appearance #a_last{
     position: absolute;
-    top: 0%;
+    top: 30%;
     left: 66%;
     width: 33%;
-    height: 100%;
+    height: 70%;
 }
 
 .detail_text {

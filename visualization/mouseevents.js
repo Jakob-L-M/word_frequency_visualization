@@ -22,6 +22,8 @@ function handleMouseClick(mouse_event, data) {
             for(let j = data.data.days[i][0]; j < data.data.days[i][1]; j++)
             days.push(j)
         }
+        
+        document.getElementById("dt_most").innerHTML = get_date(days[argmax(day_w)])
 
     })
 }
