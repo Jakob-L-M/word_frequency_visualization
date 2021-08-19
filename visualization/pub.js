@@ -16,7 +16,7 @@ const center = Math.min(width/2, height/2)*0.9
 
 // needs to be extracted from meta-data
 var start_day = 0;
-var end_day = 450;
+var end_day = 75;
 const start_date = "2020-01-08"; // YYYY-MM-DD
 
 const start_timestamp = Date.parse(start_date)
@@ -97,7 +97,7 @@ $.getJSON(`../data/${category}/main.json`, function(data) {
   loaded_data = data;
 
   // store length of data - equal to the number of different words
-  n = 25 // hardcoded um Sachen zu testen :D max: 148 bzw data.length
+  n = 8 // hardcoded um Sachen zu testen :D max: 148 bzw data.length
   line_width = (center - 2*inner_offset)*0.8/n
   line_gap = line_width*0.25
   skip_rings = Math.ceil(n/25) // number of rings where no dotted line should be drawn
@@ -136,9 +136,10 @@ $.getJSON(`../data/${category}/main.json`, function(data) {
   // circle bars
   var empty_arcs = 0;
   for (let i = 0; i < n; i++) {
+    
     var changed = false
+    
     for (let j = 0; j < data[i].days.length; j++) {
-      // to satisfy d3 syntax this has to be done
       
       let arc = make_arc(i - empty_arcs, data[i].days[j])
       if(arc == null) {
@@ -146,6 +147,7 @@ $.getJSON(`../data/${category}/main.json`, function(data) {
       }
       changed = true
       
+      // to satisfy d3 syntax this has to be done
       let appendix = {'color': color_to_hex(get_color(i,n)), 'data': data[i]}
       
       
