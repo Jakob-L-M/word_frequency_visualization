@@ -16,7 +16,7 @@ const center = Math.min(width/2, height/2)*0.9
 
 // needs to be extracted from meta-data
 var start_day = 0;
-var end_day = 75;
+var end_day = 440;
 const start_date = "2020-01-09"; // YYYY-MM-DD
 
 const start_timestamp = Date.parse(start_date)
@@ -114,8 +114,8 @@ $.getJSON(`../data/${category}/main.json`, function(data) {
       let outer_y = -Math.cos(angle)*center;
 
       g.append("line")
-        .attr("x1", Math.sin(angle)*(inner_offset+2.375*line_width+2*line_gap))     // x position of the first end of the line
-        .attr("y1", -Math.cos(angle)*(inner_offset+2.375*line_width+2*line_gap))      // y position of the first end of the line
+        .attr("x1", Math.sin(angle)*(inner_offset+0.5*(line_width-line_gap)))     // x position of the first end of the line
+        .attr("y1", -Math.cos(angle)*(inner_offset+0.5*(line_width-line_gap)))      // y position of the first end of the line
         .attr("x2", outer_x - Math.sin(angle)*line_width)     // x position of the second end of the line
         .attr("y2", outer_y + Math.cos(angle)*line_width)
         .attr("stroke-dasharray", `${line_gap}, ${(line_width+line_gap)*skip_rings-line_gap}`)
