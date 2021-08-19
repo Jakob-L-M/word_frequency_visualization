@@ -17,7 +17,7 @@ function handleMouseOut(mouse_event, data) {
 function handleMouseClick(mouse_event, data) {
 
     if (first_click) {
-        initview();
+        init_view();
         first_click = false;
     }
 
