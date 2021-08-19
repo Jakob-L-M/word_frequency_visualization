@@ -10,6 +10,10 @@ function handleMouseOut(mouse_event, data) {
 function handleMouseClick(mouse_event, data) {
     let word = data.data.word;
     document.getElementById("word_lable").innerHTML = word;
+
+    document.getElementById("dt_first").innerHTML = get_date(data.data.days[0][0])
+    document.getElementById("dt_last").innerHTML = get_date(data.data.days[data.data.days.length-1][1]-1)
+
     $.getJSON(`../data/${category}/words/${word}.json`, function(day_w) {
 
         // unpacking day array
@@ -18,5 +22,6 @@ function handleMouseClick(mouse_event, data) {
             for(let j = data.data.days[i][0]; j < data.data.days[i][1]; j++)
             days.push(j)
         }
+
     })
 }
