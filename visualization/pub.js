@@ -1,6 +1,6 @@
 let loaded_data;
 
-const angle_gap = 20;
+const angle_gap = 5;
 const rotation_angle = 0*(Math.PI)/180;
 const inner_offset = 25;
 
@@ -17,7 +17,7 @@ const center = Math.min(width/2, height/2)*0.9
 // needs to be extracted from meta-data
 var start_day = 0;
 var end_day = 75;
-const start_date = "2020-01-08"; // YYYY-MM-DD
+const start_date = "2020-01-09"; // YYYY-MM-DD
 
 const start_timestamp = Date.parse(start_date)
 
@@ -105,7 +105,7 @@ $.getJSON(`../data/${category}/main.json`, function(data) {
   let j = 1; // Variable to ensure we get a maximum of 100 lines
   
   // dotted lines
-  for (let i = 0; i <= total_days; i++) {
+  for (let i = 1; i <= total_days; i++) {
     if(total_days/j < 100) {
 
       let angle = (((360-angle_gap) * (i-0.5)/total_days + angle_gap/2)*(Math.PI)/180)
@@ -126,7 +126,7 @@ $.getJSON(`../data/${category}/main.json`, function(data) {
         .attr("dominant-baseline", "central")
         .attr("transform", `translate(${outer_x},${outer_y})rotate(${270 + angle*180/Math.PI})`)
         .style("font-size", `${center/25}`)
-        .text(`${get_date(i)}`)
+        .text(`${get_date(i-1)}`)
         .attr("class", "graph_date");
     } else {
       j++;
