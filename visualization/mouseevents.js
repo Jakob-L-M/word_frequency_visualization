@@ -1,8 +1,8 @@
 var clicked_word;
 var first_click = true;
-var margin = {top: 10, right: 30, bottom: 30, left: 50}
-const plot_width = document.getElementById('w_plot').clientWidth- margin.left - margin.right,
-    plot_height = document.getElementById('w_plot').clientHeight- margin.top - margin.bottom
+var margin = { top: 10, right: 30, bottom: 30, left: 50 }
+const plot_width = document.getElementById('w_plot').clientWidth - margin.left - margin.right,
+    plot_height = document.getElementById('w_plot').clientHeight - margin.top - margin.bottom
 
 var plot = d3.selectAll('#w_plot')
     .append('svg')
@@ -11,7 +11,7 @@ var plot = d3.selectAll('#w_plot')
     .append('g')
     .attr('transform', `translate(${margin.left},${margin.top})`);
 
-var x = d3.scaleLinear().range([0, plot_width+20]);
+var x = d3.scaleLinear().range([0, plot_width + 20]);
 var xAxis = d3.axisBottom().scale(x);
 plot.append("g")
     .attr("transform", `translate(0,${plot_height})`)
@@ -67,7 +67,7 @@ function handleMouseClick(mouse_event, data) {
 
             let plot_data = [];
             for (let i = days[0]; i < days[days.length - 1]; i++) {
-                
+
                 let ind = days.indexOf(i);
 
                 if (ind != -1) {
@@ -75,7 +75,7 @@ function handleMouseClick(mouse_event, data) {
                 } else {
                     plot_data.push({ "x": i, "y": 0 })
                 }
-                
+
             }
 
             update_plot(plot_data)
@@ -89,7 +89,7 @@ function init_view() {
 
 function update_plot(data) {
     // Create the X axis:
-    x.domain([0, d3.max(data, function (d) { return d.x })]);
+    x.domain([data[0].x, d3.max(data, function (d) { return d.x })]);
     plot.selectAll(".x_axis").transition()
         .duration(1000)
         .call(xAxis);
