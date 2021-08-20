@@ -15,8 +15,8 @@ const height = document.getElementById('graph').clientHeight;
 const center = Math.min(width / 2, height / 2) * 0.9
 
 // needs to be extracted from meta-data
-var start_day = 0;
-var end_day = 450;
+var start_day = 100;
+var end_day = 250
 const start_date = "2020-01-09"; // YYYY-MM-DD
 
 const start_timestamp = Date.parse(start_date)
@@ -97,7 +97,7 @@ $.getJSON(`../data/${category}/main.json`, function (data) {
   loaded_data = data;
 
   // store length of data - equal to the number of different words
-  n = 8 // hardcoded um Sachen zu testen :D max: 148 bzw data.length
+  n = 140 // hardcoded um Sachen zu testen :D max: 148 bzw data.length
   line_width = (center - 2 * inner_offset) * 0.8 / n
   line_gap = line_width * 0.25
   skip_rings = Math.ceil(n / 25) // number of rings where no dotted line should be drawn
@@ -126,7 +126,7 @@ $.getJSON(`../data/${category}/main.json`, function (data) {
         .attr("dominant-baseline", "central")
         .attr("transform", `translate(${outer_x * 1.02},${outer_y * 1.02})rotate(${270 + angle * 180 / Math.PI})`)
         .style("font-size", `${center / 25}`)
-        .text(`${get_date(i - 1)}`)
+        .text(`${get_date(start_day + i - 1)}`)
         .attr("class", "graph_date");
     } else {
       j++;
