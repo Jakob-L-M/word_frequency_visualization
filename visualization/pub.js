@@ -15,10 +15,11 @@ const height = document.getElementById('graph').clientHeight;
 const center = Math.min(width / 2, height / 2) * 0.9
 
 // needs to be extracted from meta-data
-var start_day = 100;
-var end_day = 250
+var max_day = 456;
 const start_date = "2020-01-09"; // YYYY-MM-DD
 
+var start_day = parseInt(document.getElementById('start_day').innerHTML);
+var end_day = parseInt(document.getElementById('end_day').innerHTML);
 const start_timestamp = Date.parse(start_date)
 
 var total_days = end_day - start_day
@@ -88,7 +89,7 @@ const vis = d3.select('#graph')
   .attr("width", "100%")
   .attr("height", "100%");
 
-const g = vis.append("g").attr("transform", `translate(${width / 2}, ${height / 2})`);
+var g = vis.append("g").attr("transform", `translate(${width / 2}, ${height / 2})`);
 
 
 // main creation
@@ -96,8 +97,17 @@ $.getJSON(`../data/${category}/main.json`, function (data) {
 
   loaded_data = data;
 
+  update_graph(data);
+});
+
+function update_graph(data) {
+
+  start_day = parseInt(document.getElementById('start_day').value);
+  end_day = parseInt(document.getElementById('end_day').value);
+  total_days = end_day - start_day
+
   // store length of data - equal to the number of different words
-  n = 140 // hardcoded um Sachen zu testen :D max: 148 bzw data.length
+  n = 25 // hardcoded um Sachen zu testen :D max: 148 bzw data.length
   line_width = (center - 2 * inner_offset) * 0.8 / n
   line_gap = line_width * 0.25
   skip_rings = Math.ceil(n / 25) // number of rings where no dotted line should be drawn
@@ -105,6 +115,9 @@ $.getJSON(`../data/${category}/main.json`, function (data) {
   let j = 1; // Variable to ensure we get a maximum of 100 lines
 
   // dotted lines
+  var d = []
+  let current_days = [];
+  
   for (let i = 1; i <= total_days; i++) {
     if (total_days / j < 100) {
 
@@ -113,6 +126,7 @@ $.getJSON(`../data/${category}/main.json`, function (data) {
       let outer_x = Math.sin(angle) * center;
       let outer_y = -Math.cos(angle) * center;
 
+      /*
       g.append("line")
         .attr("x1", Math.sin(angle) * (inner_offset + 0.5 * (line_width - line_gap)))     // x position of the first end of the line
         .attr("y1", -Math.cos(angle) * (inner_offset + 0.5 * (line_width - line_gap)))      // y position of the first end of the line
@@ -120,19 +134,41 @@ $.getJSON(`../data/${category}/main.json`, function (data) {
         .attr("y2", outer_y * 0.9)
         .attr("stroke-dasharray", `${line_gap}, ${(line_width + line_gap) * skip_rings - line_gap}`)
         .attr("class", "graph_line");
+        */
       j = 1;
-      g.append("text")
-        .attr("text-anchor", "middle")
-        .attr("dominant-baseline", "central")
-        .attr("transform", `translate(${outer_x * 1.02},${outer_y * 1.02})rotate(${270 + angle * 180 / Math.PI})`)
-        .style("font-size", `${center / 25}`)
-        .text(`${get_date(start_day + i - 1)}`)
-        .attr("class", "graph_date");
+      current_days.push(start_day + i)
+      d.push({'day': start_day + i, 'angle': angle, 'o_x': outer_x, 'o_y': outer_y})
     } else {
       j++;
     }
   }
 
+  let past_days = $('.graph_date').map(function() {
+    return parseInt($(this).attr('id'));
+  });
+  for (let i = 0; i < past_days.length; i++) {
+    if (current_days.indexOf(past_days[i]) == -1) {
+      $(` #${past_days[i]} `).remove();
+    }
+  }
+
+  let u = vis.selectAll('.graph_date')
+  .data(d, function(d) {return d.day});
+  
+  u.enter()
+    .append("text")
+    .attr("text-anchor", "middle")
+    .attr("class", "graph_date")
+    .attr("id", function(d) {return d.day})
+    .attr("transform", function(d) {return `translate(${width / 2}, ${height / 2})rotate(${270 + d.angle * 180 / Math.PI})`})
+    .merge(u)
+    .transition()
+    .duration(1000)
+    .text(function(d) {return `${get_date(d.day - 1)}`})
+    .attr("dominant-baseline", "central")
+    .attr("transform", function(d) {return `translate(${d.o_x * 1.02 + width/2},${d.o_y * 1.02 + height/2})rotate(${270 + d.angle * 180 / Math.PI})`})
+    .style("font-size", `${center / 25}`);
+  	
   // circle bars
   var empty_arcs = 0;
   for (let i = 0; i < n; i++) {
@@ -161,8 +197,9 @@ $.getJSON(`../data/${category}/main.json`, function (data) {
         .on("click", handleMouseClick)
     }
     if (!changed) {
-      console.log(i)
       empty_arcs++
     }
   }
-});
+
+  //slider
+}

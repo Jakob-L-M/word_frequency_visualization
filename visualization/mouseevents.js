@@ -103,9 +103,9 @@ function update_plot(data) {
 
     // Create a update selection: bind to the new data
     var u = plot.selectAll(".line")
-        .data([data], function (d) { return d.x });
+        .data([data], function (d) { console.log(d);return d.x });
 
-    // Updata the line
+    // Update the line
     u
         .enter()
         .append("path")
@@ -114,7 +114,7 @@ function update_plot(data) {
         .transition()
         .duration(1000)
         .attr("d", d3.line()
-            .x(function (d) { return x(d.x); })
+            .x(function (d) {console.log(d); return x(d.x); })
             .y(function (d) { return y(d.y); }))
         .attr("fill", "none")
         .attr("stroke", "steelblue")

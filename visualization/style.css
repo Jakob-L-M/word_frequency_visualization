@@ -37,6 +37,14 @@ body {
     font-family: 'VT323', monospace;
 }
 
+#slider {
+    position: absolute;
+    top: 85%;
+    height: 10%;
+    width: 51%;
+    left: 6%;
+}
+
 #details {
     position: absolute;
     top: 25%;
