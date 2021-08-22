@@ -56,27 +56,22 @@ function handleMouseClick(mouse_event, data) {
 
         $.getJSON(`../data/${category}/words/${word}.json`, function (day_w) {
 
+            let plot_data = [];
             // unpacking day array
             var days = [];
+            
+            let counter = 0
             for (let i = 0; i < data.data.days.length; i++) {
-                for (let j = data.data.days[i][0]; j < data.data.days[i][1]; j++)
+                plot_data.push({ "x": data.data.days[i][0] - 1, "y": 0 })
+                for (let j = data.data.days[i][0]; j < data.data.days[i][1]; j++) {
+                    plot_data.push({ "x": j, "y": day_w[counter] })
                     days.push(j)
-            }
-
-            document.getElementById("dt_most").innerHTML = get_date(days[argmax(day_w)])
-
-            let plot_data = [];
-            for (let i = days[0]; i < days[days.length - 1]; i++) {
-
-                let ind = days.indexOf(i);
-
-                if (ind != -1) {
-                    plot_data.push({ "x": days[ind], "y": day_w[ind] })
-                } else {
-                    plot_data.push({ "x": i, "y": 0 })
+                    counter++
                 }
-
+                plot_data.push({ "x": data.data.days[i][1], "y": 0 })
             }
+            
+            document.getElementById("dt_most").innerHTML = get_date(days[argmax(day_w)])
 
             update_plot(plot_data)
         })
