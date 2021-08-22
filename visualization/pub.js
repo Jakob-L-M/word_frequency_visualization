@@ -126,18 +126,10 @@ function update_graph(data) {
       let outer_x = Math.sin(angle) * center;
       let outer_y = -Math.cos(angle) * center;
 
-      /*
-      g.append("line")
-        .attr("x1", Math.sin(angle) * (inner_offset + 0.5 * (line_width - line_gap)))     // x position of the first end of the line
-        .attr("y1", -Math.cos(angle) * (inner_offset + 0.5 * (line_width - line_gap)))      // y position of the first end of the line
-        .attr("x2", outer_x * 0.9)     // x position of the second end of the line
-        .attr("y2", outer_y * 0.9)
-        .attr("stroke-dasharray", `${line_gap}, ${(line_width + line_gap) * skip_rings - line_gap}`)
-        .attr("class", "graph_line");
-        */
-      j = 1;
       current_days.push(start_day + i)
       lable_data.push({ 'day': start_day + i, 'angle': angle, 'o_x': outer_x, 'o_y': outer_y })
+
+      j = 1;
     } else {
       j++;
     }
@@ -148,9 +140,11 @@ function update_graph(data) {
   });
   for (let i = 0; i < past_days.length; i++) {
     if (current_days.indexOf(past_days[i]) == -1) {
-      $(` #${past_days[i]} `).remove();
+      $(` .${past_days[i]} `).remove();
     }
   }
+
+  update_lines();
 
   update_dates();
 
@@ -187,6 +181,25 @@ function update_graph(data) {
   }
 
 
+  function update_lines() {
+    let u = vis.selectAll('.graph_line')
+      .data(lable_data, function (d) { return d.day; });
+
+    u.enter()
+      .append("line")
+      .attr("class", function (d) { return `graph_line ${d.day}`; })
+      .attr("id", function (d) { return d.day; })
+      .attr("transform", function (d) { return `translate(${width / 2}, ${height / 2})`; })
+      .merge(u)
+      .transition()
+      .duration(1000)
+      .attr("x1", function (d) { return Math.sin(d.angle) * (inner_offset + 0.5 * (line_width - line_gap)); }) // x position of the first end of the line
+      .attr("y1", function (d) { return -Math.cos(d.angle) * (inner_offset + 0.5 * (line_width - line_gap)); }) // y position of the first end of the line
+      .attr("x2", function (d) { return d.o_x * 0.92; }) // x position of the second end of the line
+      .attr("y2", function (d) { return d.o_y * 0.92; })
+      .attr("stroke-dasharray", `${line_gap}, ${(line_width + line_gap) * skip_rings - line_gap}`);
+  }
+
   function update_dates() {
     let u = vis.selectAll('.graph_date')
       .data(lable_data, function (d) { return d.day; });
@@ -194,7 +207,7 @@ function update_graph(data) {
     u.enter()
       .append("text")
       .attr("text-anchor", "middle")
-      .attr("class", "graph_date")
+      .attr("class", function (d) { return `graph_date ${d.day}`; })
       .attr("id", function (d) { return d.day; })
       .attr("transform", function (d) { return `translate(${width / 2}, ${height / 2})rotate(${270 + d.angle * 180 / Math.PI})`; })
       .merge(u)
