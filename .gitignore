@@ -3,3 +3,5 @@ data/
 orga_files/
 desktop.ini
 .ipynb_check*/
+keywords.json
+stop_words_german.json
