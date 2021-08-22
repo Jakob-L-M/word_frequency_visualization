@@ -115,9 +115,9 @@ function update_graph(data) {
   let j = 1; // Variable to ensure we get a maximum of 100 lines
 
   // dotted lines
-  var d = []
+  var lable_data = []
   let current_days = [];
-  
+
   for (let i = 1; i <= total_days; i++) {
     if (total_days / j < 100) {
 
@@ -137,13 +137,13 @@ function update_graph(data) {
         */
       j = 1;
       current_days.push(start_day + i)
-      d.push({'day': start_day + i, 'angle': angle, 'o_x': outer_x, 'o_y': outer_y})
+      lable_data.push({ 'day': start_day + i, 'angle': angle, 'o_x': outer_x, 'o_y': outer_y })
     } else {
       j++;
     }
   }
 
-  let past_days = $('.graph_date').map(function() {
+  let past_days = $('.graph_date').map(function () {
     return parseInt($(this).attr('id'));
   });
   for (let i = 0; i < past_days.length; i++) {
@@ -152,23 +152,8 @@ function update_graph(data) {
     }
   }
 
-  let u = vis.selectAll('.graph_date')
-  .data(d, function(d) {return d.day});
-  
-  u.enter()
-    .append("text")
-    .attr("text-anchor", "middle")
-    .attr("class", "graph_date")
-    .attr("id", function(d) {return d.day})
-    .attr("transform", function(d) {return `translate(${width / 2}, ${height / 2})rotate(${270 + d.angle * 180 / Math.PI})`})
-    .merge(u)
-    .transition()
-    .duration(1000)
-    .text(function(d) {return `${get_date(d.day - 1)}`})
-    .attr("dominant-baseline", "central")
-    .attr("transform", function(d) {return `translate(${d.o_x * 1.02 + width/2},${d.o_y * 1.02 + height/2})rotate(${270 + d.angle * 180 / Math.PI})`})
-    .style("font-size", `${center / 25}`);
-  	
+  update_dates();
+
   // circle bars
   var empty_arcs = 0;
   for (let i = 0; i < n; i++) {
@@ -201,5 +186,24 @@ function update_graph(data) {
     }
   }
 
-  //slider
+
+  function update_dates() {
+    let u = vis.selectAll('.graph_date')
+      .data(lable_data, function (d) { return d.day; });
+
+    u.enter()
+      .append("text")
+      .attr("text-anchor", "middle")
+      .attr("class", "graph_date")
+      .attr("id", function (d) { return d.day; })
+      .attr("transform", function (d) { return `translate(${width / 2}, ${height / 2})rotate(${270 + d.angle * 180 / Math.PI})`; })
+      .merge(u)
+      .transition()
+      .duration(1000)
+      .text(function (d) { return `${get_date(d.day - 1)}`; })
+      .attr("dominant-baseline", "central")
+      .attr("transform", function (d) { return `translate(${d.o_x * 1.02 + width / 2},${d.o_y * 1.02 + height / 2})rotate(${270 + d.angle * 180 / Math.PI})`; })
+      .style("font-size", `${center / 25}`);
+  }
+
 }
