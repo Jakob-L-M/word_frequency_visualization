@@ -6,3 +6,6 @@ desktop.ini
 keywords.json
 stop_words_german.json
 visualization/page.zip
+.idea/
+*.pyc
+*.csv
