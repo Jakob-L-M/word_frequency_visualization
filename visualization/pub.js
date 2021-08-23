@@ -114,7 +114,9 @@ function create_slider(start_date, max_day) {
   }).on('slideStop', callback)
 
   function callback(d) {
-    update_graph(d.value[0], d.value[1])
+    if (d.value[0] != d.value[1]){
+      update_graph(d.value[0], d.value[1])
+    }
   }
 }
 
@@ -148,7 +150,7 @@ function update_graph(start_d, end_d) {
         'word': data[i].word,
         'data': data[i],
         'start': Math.max(data[i].days[j][0], start_day),
-        'end': Math.min(data[i].days[j][1], end_day)
+        'end': Math.min(data[i].days[j][1] - 1, end_day)
       })
       current_arcs.push(`${i}-${j}`)
     }
