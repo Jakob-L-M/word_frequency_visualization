@@ -25,13 +25,13 @@ plot.append("g")
 function handleMouseOver(mouse_event, data) {
     // #15DB95 accent color from pallet
     if (data.data.word != clicked_word) {
-        d3.selectAll(`.${mouse_event.target.classList.value}`).style('fill', '#ffb648')
+        d3.selectAll(`.${mouse_event.target.classList.value.split(' ')[1]}`).style('fill', '#ffb648')
     }
 }
 
 function handleMouseOut(mouse_event, data) {
     if (data.data.word != clicked_word) {
-        d3.selectAll(`.${mouse_event.target.classList.value}`).style('fill', data.color)
+        d3.selectAll(`.${mouse_event.target.classList.value.split(' ')[1]}`).style('fill', data.color)
     }
 }
 

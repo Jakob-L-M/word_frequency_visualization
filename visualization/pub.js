@@ -4,9 +4,11 @@ const angle_gap = 5;
 const rotation_angle = 0 * (Math.PI) / 180;
 const inner_offset = 25;
 
-var line_width, line_gap;
+var line_width, line_gap, skip_rings;
 
 const category = 'corona'
+
+const transition_time = 1000;
 
 const width = document.getElementById('graph').clientWidth;
 const height = document.getElementById('graph').clientHeight;
@@ -89,7 +91,7 @@ const vis = d3.select('#graph')
   .attr("width", "100%")
   .attr("height", "100%");
 
-var g = vis.append("g").attr("transform", `translate(${width / 2}, ${height / 2})`);
+// var g = vis.append("g").attr("transform", `translate(${width / 2}, ${height / 2})`);
 
 
 // main creation
@@ -116,22 +118,56 @@ function create_slider(start_date, max_day) {
   }
 }
 
-function update_graph(start_day, end_day) {
+function update_graph(start_d, end_d) {
 
+  var current_arcs = [];
   let data = loaded_data;
+
+  start_day = start_d
+  end_day = end_d
 
   total_days = end_day - start_day
 
+  let arc_data = [];
+  var empty_arcs = 0;
+  for (let i = 0; i < data.length; i++) {
+
+    var changed = false
+
+    for (let j = 0; j < data[i].days.length; j++) {
+
+      if (data[i].days[j][1] <= start_day || data[i].days[j][0] >= end_day) {
+        continue
+      }
+      changed = true
+
+      // to satisfy d3 syntax this has to be done
+      arc_data.push({
+        'id': `${i}-${j}`,
+        'ind': i - empty_arcs,
+        'word': data[i].word,
+        'data': data[i],
+        'start': Math.max(data[i].days[j][0], start_day),
+        'end': Math.min(data[i].days[j][1], end_day)
+      })
+      current_arcs.push(`${i}-${j}`)
+    }
+    if (!changed) {
+      empty_arcs++
+    } else {
+    }
+  }
+
   // store length of data - equal to the number of different words
-  n = 25 // hardcoded um Sachen zu testen :D max: 148 bzw data.length
-  line_width = (center - 2 * inner_offset) * 0.8 / n
+  n = arc_data[arc_data.length - 1].ind // hardcoded um Sachen zu testen :D max: 148 bzw data.length
+  line_width = (center - 2 * inner_offset) * 0.79 / n
   line_gap = line_width * 0.25
   skip_rings = Math.ceil(n / 25) // number of rings where no dotted line should be drawn
 
   let j = 1; // Variable to ensure we get a maximum of 100 lines
 
   // dotted lines
-  var lable_data = []
+  var lable_data = [];
   let current_days = [];
 
   for (let i = 1; i <= total_days; i++) {
@@ -160,42 +196,47 @@ function update_graph(start_day, end_day) {
     }
   }
 
+  let past_arcs = $('.graph_arc').map(function () {
+    return $(this).attr('class').split(' ')[2]
+  })
+
+  past_arcs = Array.from(new Set(past_arcs))
+  current_arcs = Array.from(new Set(current_arcs))
+  let diff = past_arcs.filter(x => !current_arcs.includes(x))
+  for (let i = 0; i < diff.length; i++) {
+    $(` .${diff[i]} `).remove()
+  }
+
+  update_arcs();
+
   update_lines();
 
   update_dates();
 
   // circle bars
-  var empty_arcs = 0;
-  for (let i = 0; i < n; i++) {
+  function update_arcs() {
+    let u = vis.selectAll('.graph_arc')
+      .data(arc_data, function (d) { return d.id })
 
-    var changed = false
+    let total_arcs = arc_data[arc_data.length - 1].ind
 
-    for (let j = 0; j < data[i].days.length; j++) {
-
-      let arc = make_arc(i - empty_arcs, data[i].days[j])
-      if (arc == null) {
-        continue
-      }
-      changed = true
-
-      // to satisfy d3 syntax this has to be done
-      let appendix = { 'color': color_to_hex(get_color(i, n)), 'data': data[i] }
-
-
-      g.append("path")
-        .data([appendix])
-        .attr("d", arc)
-        .attr("class", String(data[i].word)) //make sure no number gets set as class
-        .attr("fill", appendix.color)
-        .on("mouseover", handleMouseOver)
-        .on("mouseout", handleMouseOut)
-        .on("click", handleMouseClick)
-    }
-    if (!changed) {
-      empty_arcs++
-    }
+    u.enter()
+      .append("path")
+      .attr("class", function (d) { return `graph_arc ${d.word} ${d.id}` })
+      .attr("transform", `translate(${width / 2}, ${height / 2})`)
+      .on("mouseover", handleMouseOver)
+      .on("mouseout", handleMouseOut)
+      .on("click", handleMouseClick)
+      .attr('fill', (d) => color_to_hex(get_color(d.ind, total_arcs)))
+      .merge(u)
+      .transition()
+      .duration(transition_time)
+      .attr('d', d3.arc()
+        .innerRadius((d) => inner_offset + (line_width + line_gap) * d.ind)
+        .outerRadius((d) => inner_offset + (line_width + line_gap) * d.ind + line_width)
+        .startAngle((d) => day_to_radians(d.start - start_day) + rotation_angle)
+        .endAngle((d) => day_to_radians(d.end - start_day) + rotation_angle))
   }
-
 
   function update_lines() {
     let u = vis.selectAll('.graph_line')
@@ -208,12 +249,12 @@ function update_graph(start_day, end_day) {
       .attr("transform", function (d) { return `translate(${width / 2}, ${height / 2})`; })
       .merge(u)
       .transition()
-      .duration(1000)
+      .duration(transition_time)
       .attr("x1", function (d) { return Math.sin(d.angle) * (inner_offset + 0.5 * (line_width - line_gap)); }) // x position of the first end of the line
       .attr("y1", function (d) { return -Math.cos(d.angle) * (inner_offset + 0.5 * (line_width - line_gap)); }) // y position of the first end of the line
       .attr("x2", function (d) { return d.o_x * 0.92; }) // x position of the second end of the line
       .attr("y2", function (d) { return d.o_y * 0.92; })
-      .attr("stroke-dasharray", `${line_gap}, ${(line_width + line_gap) * skip_rings - line_gap}`);
+      .attr("stroke-dasharray", `${line_gap}, ${(line_width + line_gap) * skip_rings - line_gap}`)
   }
 
   function update_dates() {
@@ -229,7 +270,7 @@ function update_graph(start_day, end_day) {
       .on("click", handleDateClick)
       .merge(u)
       .transition()
-      .duration(1000)
+      .duration(transition_time)
       .text(function (d) { return `${get_date(d.day - 1)}`; })
       .attr("dominant-baseline", "central")
       .attr("transform", function (d) { return `translate(${d.o_x * 1.02 + width / 2},${d.o_y * 1.02 + height / 2})rotate(${270 + d.angle * 180 / Math.PI})`; })
