@@ -38,10 +38,8 @@ function handleMouseOut(mouse_event, data) {
 
 function handleMouseClick(mouse_event, data) {
 
-    if (first_click) {
-        init_view();
-        first_click = false;
-    }
+    document.getElementById('detail_words').style.visibility = 'visible'
+    document.getElementById('detail_day').style.visibility = 'hidden'
 
     let word = data.data.word;
 
@@ -78,8 +76,19 @@ function handleMouseClick(mouse_event, data) {
     }
 }
 
-function init_view() {
-    document.getElementById('appearance').style.visibility = 'visible'
+function handleDateClick(mouse_event, data) {
+    let day = data.day
+
+    document.getElementById('detail_words').style.visibility = 'hidden'
+    document.getElementById('detail_day').style.visibility = 'visible'
+
+    document.getElementById('day_lable').innerHTML = get_date(day - 1)
+    $.getJSON(`../data/${category}/days/${day}.json`, function(json_data){
+        let words = json_data.words
+        let weights = json_data.weights
+
+        document.getElementById('day_word_cloud').innerHTML = `${words}\n${weights}`
+    })
 }
 
 function update_plot(data) {

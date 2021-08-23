@@ -210,6 +210,7 @@ function update_graph(data) {
       .attr("class", function (d) { return `graph_date ${d.day}`; })
       .attr("id", function (d) { return d.day; })
       .attr("transform", function (d) { return `translate(${width / 2}, ${height / 2})rotate(${270 + d.angle * 180 / Math.PI})`; })
+      .on("click", handleDateClick)
       .merge(u)
       .transition()
       .duration(1000)
