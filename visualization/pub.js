@@ -95,7 +95,7 @@ const vis = d3.select('#graph')
 
 
 // main creation
-$.getJSON(`../data/${category}/main.json`, function (data) {
+$.getJSON(`/data/${category}/main.json`, function (data) {
 
   loaded_data = data;
 

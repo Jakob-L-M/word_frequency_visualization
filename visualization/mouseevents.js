@@ -51,7 +51,7 @@ function handleMouseClick(mouse_event, data) {
         document.getElementById("dt_first").innerHTML = get_date(data.data.days[0][0])
         document.getElementById("dt_last").innerHTML = get_date(data.data.days[data.data.days.length - 1][1] - 1)
 
-        $.getJSON(`../data/${category}/words/${word}.json`, function (day_w) {
+        $.getJSON(`/data/${category}/words/${word}.json`, function (day_w) {
 
             let plot_data = [];
             // unpacking day array
@@ -84,7 +84,7 @@ function handleDateClick(mouse_event, data) {
     document.getElementById('detail_day').style.visibility = 'visible'
 
     document.getElementById('day_lable').innerHTML = get_date(day - 1)
-    $.getJSON(`../data/${category}/days/${day}.json`, function (json_data) {
+    $.getJSON(`/data/${category}/days/${day}.json`, function (json_data) {
 
         var layout = cloud()
             .size([wc_rect.width, wc_rect.height])
@@ -94,7 +94,6 @@ function handleDateClick(mouse_event, data) {
             .fontSize(function (d) { return d.size })
             .on("end", draw_cloud)
         layout.start()
-        console.log(layout)
     })
 }
 
