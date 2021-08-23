@@ -1,5 +1,4 @@
 var clicked_word;
-var first_click = true;
 var margin = { top: 10, right: 30, bottom: 30, left: 50 }
 const plot_width = document.getElementById('w_plot').clientWidth - margin.left - margin.right,
     plot_height = document.getElementById('w_plot').clientHeight - margin.top - margin.bottom
@@ -57,7 +56,7 @@ function handleMouseClick(mouse_event, data) {
             let plot_data = [];
             // unpacking day array
             var days = [];
-            
+
             let counter = 0
             for (let i = 0; i < data.data.days.length; i++) {
                 plot_data.push({ "x": data.data.days[i][0] - 1, "y": 0 })
@@ -68,13 +67,15 @@ function handleMouseClick(mouse_event, data) {
                 }
                 plot_data.push({ "x": data.data.days[i][1], "y": 0 })
             }
-            
+
             document.getElementById("dt_most").innerHTML = get_date(days[argmax(day_w)])
 
             update_plot(plot_data)
         })
     }
 }
+
+const wc_rect = (document.getElementById('day_word_cloud').getClientRects())[0]
 
 function handleDateClick(mouse_event, data) {
     let day = data.day
@@ -83,11 +84,17 @@ function handleDateClick(mouse_event, data) {
     document.getElementById('detail_day').style.visibility = 'visible'
 
     document.getElementById('day_lable').innerHTML = get_date(day - 1)
-    $.getJSON(`../data/${category}/days/${day}.json`, function(json_data){
-        let words = json_data.words
-        let weights = json_data.weights
+    $.getJSON(`../data/${category}/days/${day}.json`, function (json_data) {
 
-        document.getElementById('day_word_cloud').innerHTML = `${words}\n${weights}`
+        var layout = cloud()
+            .size([wc_rect.width, wc_rect.height])
+            .words(json_data.words.map(function (d) {
+                return { text: d, size: 24 * (0.5 + Math.random()) }
+            }))
+            .fontSize(function (d) { return d.size })
+            .on("end", draw_cloud)
+        layout.start()
+        console.log(layout)
     })
 }
 
@@ -123,4 +130,26 @@ function update_plot(data) {
         .attr("fill", "none")
         .attr("stroke", "steelblue")
         .attr("stroke-width", 2.5)
+}
+
+function draw_cloud(words) {
+
+    document.getElementById('day_word_cloud').innerHTML = ''
+
+    d3.select("#day_word_cloud").append("svg")
+        .attr("width", wc_rect.width)
+        .attr("height", wc_rect.height)
+        .append("g")
+        .attr("transform", `translate(${wc_rect.width / 2},${wc_rect.height / 2})`)
+        .selectAll("text")
+        .data(words)
+        .enter().append("text")
+        .style("font-size", function (d) { return d.size + "px"; })
+        .style("font-family", "Impact")
+        .style("fill", "steelblue")
+        .attr("text-anchor", "middle")
+        .attr("transform", function (d) {
+            return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+        })
+        .text(function (d) { return d.text; });
 }
