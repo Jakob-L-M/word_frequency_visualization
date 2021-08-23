@@ -18,8 +18,8 @@ const center = Math.min(width / 2, height / 2) * 0.9
 var max_day = 456;
 const start_date = "2020-01-09"; // YYYY-MM-DD
 
-var start_day = parseInt(document.getElementById('start_day').innerHTML);
-var end_day = parseInt(document.getElementById('end_day').innerHTML);
+var start_day = 0;
+var end_day = max_day;
 const start_timestamp = Date.parse(start_date)
 
 var total_days = end_day - start_day
@@ -97,13 +97,29 @@ $.getJSON(`../data/${category}/main.json`, function (data) {
 
   loaded_data = data;
 
-  update_graph(data);
+  update_graph(0, max_day);
+
+  create_slider(start_date, max_day);
 });
 
-function update_graph(data) {
+function create_slider(start_date, max_day) {
+  $('#slider').slider({
+    min: 0,
+    max: max_day,
+    range: true,
+    tooltip: 'hidden',
+    tooltip_split: true,
+  }).on('slideStop', callback)
 
-  start_day = parseInt(document.getElementById('start_day').value);
-  end_day = parseInt(document.getElementById('end_day').value);
+  function callback(d) {
+    update_graph(d.value[0], d.value[1])
+  }
+}
+
+function update_graph(start_day, end_day) {
+
+  let data = loaded_data;
+
   total_days = end_day - start_day
 
   // store length of data - equal to the number of different words

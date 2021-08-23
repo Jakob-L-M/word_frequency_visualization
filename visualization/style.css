@@ -27,7 +27,7 @@ body {
     width: 57%;
 }
 
-#slider {
+.slider {
     position: absolute;
     top: 85%;
     height: 10%;
@@ -66,24 +66,24 @@ body {
 }
 #detail_words #appearance #a_first{
     position: absolute;
-    top: 30%;
+    top: 20%;
     left: 0%;
     width: 33%;
-    height: 70%;
+    height: 80%;
 }
 #detail_words #appearance #a_most{
     position: absolute;
     top: 0%;
     left: 33%;
     width: 33%;
-    height: 70%;
+    height: 80%;
 }
 #detail_words #appearance #a_last{
     position: absolute;
-    top: 30%;
+    top: 20%;
     left: 66%;
     width: 33%;
-    height: 70%;
+    height: 80%;
 }
 
 #detail_words #w_plot {
@@ -141,4 +141,5 @@ body {
     height: 70%;
     width: 100%;
 }
+
 
