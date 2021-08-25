@@ -17,8 +17,8 @@ const height = document.getElementById('graph').clientHeight;
 const center = Math.min(width / 2, height / 2) * 0.9
 
 // needs to be extracted from meta-data
-var max_day = 456;
-const start_date = "2020-01-09"; // YYYY-MM-DD
+var max_day = 460;
+const start_date = "2020-01-05"; // YYYY-MM-DD
 
 var start_day = 0;
 var end_day = max_day;
@@ -102,6 +102,8 @@ $.getJSON(`/data/${category}/main.json`, function (data) {
   update_graph(0, max_day);
 
   create_slider(start_date, max_day);
+
+  console.log(data)
 });
 
 function create_slider(start_date, max_day) {
@@ -136,9 +138,9 @@ function update_graph(start_d, end_d) {
 
     var changed = false
 
-    for (let j = 0; j < data[i].days.length; j++) {
+    for (let j = 0; j < data[i].d.length; j++) {
 
-      if (data[i].days[j][1] <= start_day || data[i].days[j][0] >= end_day) {
+      if (data[i].d[j][1] <= start_day || data[i].d[j][0] >= end_day) {
         continue
       }
       changed = true
@@ -147,10 +149,10 @@ function update_graph(start_d, end_d) {
       arc_data.push({
         'id': `${i}-${j}`,
         'ind': i - empty_arcs,
-        'word': data[i].word,
-        'data': data[i],
-        'start': Math.max(data[i].days[j][0], start_day),
-        'end': Math.min(data[i].days[j][1] - 1, end_day)
+        'word': data[i].w,
+        'days': data[i].d,
+        'start': Math.max(data[i].d[j][0], start_day),
+        'end': Math.min(data[i].d[j][1] - 1, end_day)
       })
       current_arcs.push(`${i}-${j}`)
     }

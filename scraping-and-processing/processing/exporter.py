@@ -22,28 +22,48 @@ def export_main(data, meta_data, category):
         for w_ind, word in enumerate(day['words']):
             if word in word_dic_main:
                 word_dic_main[word].append(d_ind)
-    print("main", word_dic_main)
+            else:
+                word_dic_main[word] = [d_ind]
+    main = []
+    for i in list(word_dic_main.keys()):
+        if len(word_dic_main[i]) < len(data)/100 + 1 or len(word_dic_main[i]) > len(data)/3 + 1:
+            continue
+        else:
+            main_days = []
+            day_set = set(word_dic_main[i])
+            for j in sorted(word_dic_main[i]):
+                if j-1 not in day_set:
+                    start_day = j
+                if j+1 in day_set:
+                    continue
+                else:
+                    main_days.append([start_day, j + 1])
+            main.append({"w": i.upper(), "d": main_days})
+    write_json(main, "../../visualization/data/" + category + "/main.json")
+
 
 
 def export_days(data, category):
     for d_ind, day in enumerate(data):
-        day_dic = {'words': day['words'], 'weights': day['weights']}
-        write_json(day_dic, '../../data/' + category + '/days/' + str(d_ind) + '.json')
+        day_dic = {'words': [i.upper() for i in day['words']], 'weights': day['weights']}
+        write_json(day_dic, "../../visualization/data/" + category + "/days/" + str(day['day']) + ".json")
 
 
 def export_words(data, category):
     word_dic_words = {}
     for d_ind, day in enumerate(data):
         for w_ind, word in enumerate(day['words']):
+            word = word.upper()
             if word in word_dic_words:
                 word_dic_words[word].append(day['weights'][w_ind])
+            else:
+                word_dic_words[word] = [day['weights'][w_ind]]
 
-    print("main", word_dic_words)
-    #for word in word_dic_words:
-    #    write_json(word_dic_words[word], '../../data/' + category + '/days/' + word + '.json')
+    for word in word_dic_words:
+        write_json(word_dic_words[word], '../../visualization/data/' + category + '/words/' + word + '.json')
 
 
-def export(data, start_date, category):
+def export(data, start_date, total_days, category):
     """
     data: [{'day': <>, 'words': [<>], 'weights': [<>]]
     """

@@ -24,14 +24,14 @@ plot.append("g")
 
 function handleMouseOver(mouse_event, data) {
     // #15DB95 accent color from pallet
-    if (data.data.word != clicked_word) {
-        d3.selectAll(`.${mouse_event.target.classList.value.split(' ')[1]}`).style('fill', '#ffb648')
+    if (data.word != clicked_word) {
+        d3.selectAll(`.${data.word}`).style('fill', '#ffb648')
     }
 }
 
 function handleMouseOut(mouse_event, data) {
-    if (data.data.word != clicked_word) {
-        d3.selectAll(`.${mouse_event.target.classList.value.split(' ')[1]}`).style('fill', data.color)
+    if (data.word != clicked_word) {
+        d3.selectAll(`.${data.word}`).style('fill', data.color)
     }
 }
 
@@ -40,16 +40,15 @@ function handleMouseClick(mouse_event, data) {
     document.getElementById('detail_words').style.visibility = 'visible'
     document.getElementById('detail_day').style.visibility = 'hidden'
 
-    let word = data.data.word;
+    let word = data.word;
 
     if (word != clicked_word) {
         d3.selectAll(`.${clicked_word}`).style('fill', data.color)
         d3.selectAll(`.${word}`).style('fill', '#15DB95')
         clicked_word = word;
         document.getElementById("word_lable").innerHTML = word;
-
-        document.getElementById("dt_first").innerHTML = get_date(data.data.days[0][0])
-        document.getElementById("dt_last").innerHTML = get_date(data.data.days[data.data.days.length - 1][1] - 1)
+        document.getElementById("dt_first").innerHTML = get_date(data.days[0][0])
+        document.getElementById("dt_last").innerHTML = get_date(data.days[data.days.length - 1][1] - 1)
 
         $.getJSON(`/data/${category}/words/${word}.json`, function (day_w) {
 
@@ -58,14 +57,14 @@ function handleMouseClick(mouse_event, data) {
             var days = [];
 
             let counter = 0
-            for (let i = 0; i < data.data.days.length; i++) {
-                plot_data.push({ "x": data.data.days[i][0] - 1, "y": 0 })
-                for (let j = data.data.days[i][0]; j < data.data.days[i][1]; j++) {
+            for (let i = 0; i < data.days.length; i++) {
+                plot_data.push({ "x": data.days[i][0] - 1, "y": 0 })
+                for (let j = data.days[i][0]; j < data.days[i][1]; j++) {
                     plot_data.push({ "x": j, "y": day_w[counter] })
                     days.push(j)
                     counter++
                 }
-                plot_data.push({ "x": data.data.days[i][1], "y": 0 })
+                plot_data.push({ "x": data.days[i][1], "y": 0 })
             }
 
             document.getElementById("dt_most").innerHTML = get_date(days[argmax(day_w)])

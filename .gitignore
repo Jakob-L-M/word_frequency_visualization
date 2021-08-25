@@ -9,3 +9,4 @@ visualization/page.zip
 .idea/
 *.pyc
 *.csv
+.vscode/
