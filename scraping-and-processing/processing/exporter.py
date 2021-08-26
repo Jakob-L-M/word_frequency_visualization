@@ -60,7 +60,7 @@ def export_words(data, category):
                 word_dic_words[word] = [day['weights'][w_ind]]
 
     for word in word_dic_words:
-        write_json(word_dic_words[word], '../../visualization/data/' + category + '/words/' + word + '.json')
+        write_json(["{:.5f}".format(i) for i in word_dic_words[word]], '../../visualization/data/' + category + '/words/' + word + '.json')
 
 
 def export(data, start_date, total_days, category):
@@ -74,6 +74,3 @@ def export(data, start_date, total_days, category):
     export_words(data, category)
 
     export_main(data, meta_data, category)
-
-
-
