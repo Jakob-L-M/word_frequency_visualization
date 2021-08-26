@@ -45,7 +45,7 @@ def export_main(data, meta_data, category):
 
 def export_days(data, category):
     for day in data:
-        day_dic = {'words': [i.upper() for i in day['words']], 'weights': ["{:.5f}".format(i) for i in day['weights']]}
+        day_dic = {'w': [i.upper() for i in day['words']], 'r': ["{:.5f}".format(i) for i in day['weights']]}
         write_json(day_dic, "../../visualization/data/" + category + "/days/" + str(day['day']) + ".json")
 
 
