@@ -91,6 +91,10 @@ const vis = d3.select('#graph')
   .attr("width", "100%")
   .attr("height", "100%");
 
+const dates = vis.append("g").attr('id', 'dates');
+const lines = vis.append("g").attr('id', 'lines');
+const arcs = vis.append("g").attr('id', 'arcs');
+
 // var g = vis.append("g").attr("transform", `translate(${width / 2}, ${height / 2})`);
 
 
@@ -164,8 +168,8 @@ function update_graph(start_d, end_d) {
   }
 
   // store length of data - equal to the number of different words
-  n = arc_data[arc_data.length - 1].ind // hardcoded um Sachen zu testen :D max: 148 bzw data.length
-  line_width = (center - 2 * inner_offset) * 0.79 / n
+  n = arc_data[arc_data.length - 1].ind  + 1// hardcoded um Sachen zu testen :D max: 148 bzw data.length
+  line_width = (center*0.75 - inner_offset)/ n
   line_gap = line_width * 0.25
   skip_rings = Math.ceil(n / 25) // number of rings where no dotted line should be drawn
 
@@ -220,10 +224,10 @@ function update_graph(start_d, end_d) {
   update_arcs();
   // circle bars
   function update_arcs() {
-    let u = vis.selectAll('.graph_arc')
+    let u = arcs.selectAll('.graph_arc')
       .data(arc_data, function (d) { return d.id })
 
-    let total_arcs = arc_data[arc_data.length - 1].ind
+    let total_arcs = arc_data[arc_data.length - 1].ind + 1
 
     u.enter()
       .append("path")
@@ -245,7 +249,7 @@ function update_graph(start_d, end_d) {
   }
 
   function update_lines() {
-    let u = vis.selectAll('.graph_line')
+    let u = lines.selectAll('.graph_line')
       .data(lable_data, function (d) { return d.day; });
 
     u.enter()
@@ -264,7 +268,7 @@ function update_graph(start_d, end_d) {
   }
 
   function update_dates() {
-    let u = vis.selectAll('.graph_date')
+    let u = dates.selectAll('.graph_date')
       .data(lable_data, function (d) { return d.day; });
 
     u.enter()
