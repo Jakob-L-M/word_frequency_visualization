@@ -202,22 +202,22 @@ function update_graph(start_d, end_d) {
   }
 
   let past_arcs = $('.graph_arc').map(function () {
-    return $(this).attr('class').split(' ')[2]
+    return $(this).attr('id')
   })
 
   past_arcs = Array.from(new Set(past_arcs))
   current_arcs = Array.from(new Set(current_arcs))
   let diff = past_arcs.filter(x => !current_arcs.includes(x))
   for (let i = 0; i < diff.length; i++) {
-    $(` .${diff[i]} `).remove()
+    $(` #${diff[i]} `).remove()
   }
 
-  update_arcs();
-
+  
   update_lines();
-
+  
   update_dates();
-
+  
+  update_arcs();
   // circle bars
   function update_arcs() {
     let u = vis.selectAll('.graph_arc')
@@ -227,7 +227,8 @@ function update_graph(start_d, end_d) {
 
     u.enter()
       .append("path")
-      .attr("class", function (d) { return `graph_arc ${d.word} ${d.id}` })
+      .attr("class", function (d) { return `graph_arc ${d.word}` })
+      .attr("id", (d) => d.id)
       .attr("transform", `translate(${width / 2}, ${height / 2})`)
       .on("mouseover", handleMouseOver)
       .on("mouseout", handleMouseOut)
