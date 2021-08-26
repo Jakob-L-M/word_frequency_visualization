@@ -17,8 +17,8 @@ const height = document.getElementById('graph').clientHeight;
 const center = Math.min(width / 2, height / 2) * 0.9
 
 // needs to be extracted from meta-data
-var max_day = 460;
-const start_date = "2020-01-05"; // YYYY-MM-DD
+var max_day = 458;
+const start_date = "2020-01-07"; // YYYY-MM-DD
 
 var start_day = 0;
 var end_day = max_day;
@@ -111,6 +111,7 @@ function create_slider(start_date, max_day) {
     min: 0,
     max: max_day,
     range: true,
+    value: 0,
     tooltip: 'hidden',
     tooltip_split: true,
   }).on('slideStop', callback)
@@ -174,10 +175,10 @@ function update_graph(start_d, end_d) {
   var lable_data = [];
   let current_days = [];
 
-  for (let i = 1; i <= total_days; i++) {
+  for (let i = 0; i < total_days; i++) {
     if (total_days / j < 100) {
 
-      let angle = (((360 - angle_gap) * (i - 0.5) / total_days + angle_gap / 2) * (Math.PI) / 180)
+      let angle = (((360 - angle_gap) * (i + 0.5) / total_days + angle_gap / 2) * (Math.PI) / 180)
 
       let outer_x = Math.sin(angle) * center;
       let outer_y = -Math.cos(angle) * center;
@@ -275,7 +276,7 @@ function update_graph(start_d, end_d) {
       .merge(u)
       .transition()
       .duration(transition_time)
-      .text(function (d) { return `${get_date(d.day - 1)}`; })
+      .text(function (d) { return `${get_date(d.day)}`; })
       .attr("dominant-baseline", "central")
       .attr("transform", function (d) { return `translate(${d.o_x * 1.02 + width / 2},${d.o_y * 1.02 + height / 2})rotate(${270 + d.angle * 180 / Math.PI})`; })
       .style("font-size", `${center / 25}`);

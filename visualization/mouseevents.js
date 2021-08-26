@@ -81,8 +81,7 @@ function handleDateClick(mouse_event, data) {
 
     document.getElementById('detail_words').style.visibility = 'hidden'
     document.getElementById('detail_day').style.visibility = 'visible'
-
-    document.getElementById('day_lable').innerHTML = get_date(day - 1)
+    document.getElementById('day_lable').innerHTML = get_date(day)
     $.getJSON(`/data/${category}/days/${day}.json`, function (json_data) {
 
         var layout = cloud()
@@ -94,6 +93,8 @@ function handleDateClick(mouse_event, data) {
             .on("end", draw_cloud)
         layout.start()
     })
+
+    console.log(day)
 }
 
 function update_plot(data) {
