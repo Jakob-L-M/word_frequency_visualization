@@ -106,8 +106,6 @@ $.getJSON(`/data/${category}/main.json`, function (data) {
   update_graph(0, max_day);
 
   create_slider(start_date, max_day);
-
-  console.log(data)
 });
 
 function create_slider(start_date, max_day) {
@@ -121,7 +119,7 @@ function create_slider(start_date, max_day) {
   }).on('slideStop', callback)
 
   function callback(d) {
-    if (d.value[0] != d.value[1]){
+    if (d.value[0] != d.value[1]) {
       update_graph(d.value[0], d.value[1])
     }
   }
@@ -168,8 +166,8 @@ function update_graph(start_d, end_d) {
   }
 
   // store length of data - equal to the number of different words
-  n = arc_data[arc_data.length - 1].ind  + 1// hardcoded um Sachen zu testen :D max: 148 bzw data.length
-  line_width = (center*0.75 - inner_offset)/ n
+  n = arc_data[arc_data.length - 1].ind + 1// hardcoded um Sachen zu testen :D max: 148 bzw data.length
+  line_width = (center * 0.75 - inner_offset) / n
   line_gap = line_width * 0.25
   skip_rings = Math.ceil(n / 25) // number of rings where no dotted line should be drawn
 
@@ -177,7 +175,6 @@ function update_graph(start_d, end_d) {
 
   // dotted lines
   var lable_data = [];
-  let current_days = [];
 
   for (let i = 0; i < total_days; i++) {
     if (total_days / j < 100) {
@@ -187,7 +184,6 @@ function update_graph(start_d, end_d) {
       let outer_x = Math.sin(angle) * center;
       let outer_y = -Math.cos(angle) * center;
 
-      current_days.push(start_day + i)
       lable_data.push({ 'day': start_day + i, 'angle': angle, 'o_x': outer_x, 'o_y': outer_y })
 
       j = 1;
@@ -196,31 +192,10 @@ function update_graph(start_d, end_d) {
     }
   }
 
-  let past_days = $('.graph_date').map(function () {
-    return parseInt($(this).attr('id'));
-  });
-  for (let i = 0; i < past_days.length; i++) {
-    if (current_days.indexOf(past_days[i]) == -1) {
-      $(` .${past_days[i]} `).remove();
-    }
-  }
-
-  let past_arcs = $('.graph_arc').map(function () {
-    return $(this).attr('id')
-  })
-
-  past_arcs = Array.from(new Set(past_arcs))
-  current_arcs = Array.from(new Set(current_arcs))
-  let diff = past_arcs.filter(x => !current_arcs.includes(x))
-  for (let i = 0; i < diff.length; i++) {
-    $(` #${diff[i]} `).remove()
-  }
-
-  
   update_lines();
-  
+
   update_dates();
-  
+
   update_arcs();
   // circle bars
   function update_arcs() {
@@ -232,12 +207,10 @@ function update_graph(start_d, end_d) {
     u.enter()
       .append("path")
       .attr("class", function (d) { return `graph_arc ${d.word}` })
-      .attr("id", (d) => d.id)
-      .attr("transform", `translate(${width / 2}, ${height / 2})`)
       .on("mouseover", handleMouseOver)
       .on("mouseout", handleMouseOut)
       .on("click", handleMouseClick)
-      .attr('fill', (d) => color_to_hex(get_color(d.ind, total_arcs)))
+      .attr("transform", `translate(${width / 2}, ${height / 2})`)
       .merge(u)
       .transition()
       .duration(transition_time)
@@ -246,6 +219,9 @@ function update_graph(start_d, end_d) {
         .outerRadius((d) => inner_offset + (line_width + line_gap) * d.ind + line_width)
         .startAngle((d) => day_to_radians(d.start - start_day) + rotation_angle)
         .endAngle((d) => day_to_radians(d.end - start_day) + rotation_angle))
+      .attr('fill', (d) => color_to_hex(get_color(d.ind, total_arcs)))
+
+    u.exit().remove()
   }
 
   function update_lines() {
@@ -254,7 +230,7 @@ function update_graph(start_d, end_d) {
 
     u.enter()
       .append("line")
-      .attr("class", function (d) { return `graph_line ${d.day}`; })
+      .attr("class", function (d) { return `graph_line`; })
       .attr("id", function (d) { return d.day; })
       .attr("transform", function (d) { return `translate(${width / 2}, ${height / 2})`; })
       .merge(u)
@@ -264,7 +240,9 @@ function update_graph(start_d, end_d) {
       .attr("y1", function (d) { return -Math.cos(d.angle) * (inner_offset + 0.5 * (line_width - line_gap)); }) // y position of the first end of the line
       .attr("x2", function (d) { return d.o_x * 0.92; }) // x position of the second end of the line
       .attr("y2", function (d) { return d.o_y * 0.92; })
-      .attr("stroke-dasharray", `${line_gap}, ${(line_width + line_gap) * skip_rings - line_gap}`)
+      .attr("stroke-dasharray", `${line_gap}, ${(line_width + line_gap) * skip_rings - line_gap}`);
+
+    u.exit().remove()
   }
 
   function update_dates() {
@@ -274,7 +252,7 @@ function update_graph(start_d, end_d) {
     u.enter()
       .append("text")
       .attr("text-anchor", "middle")
-      .attr("class", function (d) { return `graph_date ${d.day}`; })
+      .attr("class", function (d) { return `graph_date`; })
       .attr("id", function (d) { return d.day; })
       .attr("transform", function (d) { return `translate(${width / 2}, ${height / 2})rotate(${270 + d.angle * 180 / Math.PI})`; })
       .on("click", handleDateClick)
@@ -285,6 +263,8 @@ function update_graph(start_d, end_d) {
       .attr("dominant-baseline", "central")
       .attr("transform", function (d) { return `translate(${d.o_x * 1.02 + width / 2},${d.o_y * 1.02 + height / 2})rotate(${270 + d.angle * 180 / Math.PI})`; })
       .style("font-size", `${center / 25}`);
+
+    u.exit().remove()
   }
 
 }
