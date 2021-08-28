@@ -10,3 +10,4 @@ visualization/page.zip
 *.pyc
 *.csv
 .vscode/
+scraping-and-processing/scraping/twitter/config.json
