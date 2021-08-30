@@ -4,10 +4,11 @@ orga_files/
 desktop.ini
 .ipynb_check*/
 keywords.json
-stop_words_german.json
+stopwords.json
 visualization/page.zip
 .idea/
 *.pyc
 *.csv
 .vscode/
-scraping-and-processing/scraping/twitter/config.json
+config.json
+TreeTagger/
