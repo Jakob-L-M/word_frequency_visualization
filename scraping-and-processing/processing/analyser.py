@@ -11,54 +11,60 @@ import re
 def analyse(Category):
     
     df = Category.data
-    date_range = pd.date_range(min(df['date'].unique()), max(df['date'].unique()))
+
+    date_range = pd.date_range(str(min(df['date']))[:10], str(max(df['date']))[:10])
     
     day_smoothing = Category.config['day_smoothing']
     k = Category.config['k']
+    lang = Category.config['lang']
 
-    stemmed_tweets = build_stemed_day_array(df, date_range, Category.stop_words, Category.lang)
-
+    stemmed_tweets = build_stemed_day_array(df, date_range, set(Category.stopwords), lang)
+    
     X, X_words = calculate_tfidf(stemmed_tweets)
-
+    
+    print('building output')
     date_arr = []
     for day in tqdm(range(0, len(date_range))):
-        arr = list(np.sum(list(np.array(X.todense()[max(0,day - day_smoothing):min(len(date_range), day + day_smoothing)])), axis = 0))
-        top_k_ind = list(map(arr.index, heapq.nlargest(k, arr)))
-        top_k_w = heapq.nlargest(k, arr)
+        arr = np.array(np.sum(X[max(0, day - day_smoothing): min(len(date_range), day + 1 + day_smoothing)], axis=0))[0]
+        words = X_words[arr != 0]
+        arr = arr[arr != 0]
+        top_k_ind = heapq.nlargest(k, enumerate(arr), key=lambda x: x[1])
+        top_k_w = [i[1] for i in top_k_ind]
         top_k_w = list(np.array(top_k_w)/sum(top_k_w))
         temp = {'day': day, 'words': [], 'weights': []}
-        for i, word in enumerate(top_k_ind):
-            temp['words'].append(X_words[word])
-            temp['weights'].append(top_k_w[i])
+        for i in range(0, len(top_k_ind)):
+            temp['words'].append(words[top_k_ind[i][0]].upper())
+            temp['weights'].append(f'{top_k_w[i]:.5f}')
         date_arr.append(temp)
 
     return date_arr
 
 
 def build_stemed_day_array(df, date_range, stop_words, lang):
+    print('Stemming Tweets')
     tagger = TreeTagger(TAGLANG=lang, TAGDIR='./TreeTagger')
-    dates = pd.to_datetime(df['date']).dt.round('D')
     res = []
     for i in tqdm(date_range):
         sentence = []
-        for tweet in df[dates == i]['text']:
+        for tweet in df[np.logical_and(df['date'] > str(i), df['date'] < str(i+pd.DateOffset(1)))]['text']:
             tweet = format_text(tweet)
             if tweet != '':
                 for word in [j.split('\t')[2] for j in tagger.tag_text(tweet)]:
                     if len(word) < 3:
                         continue
-                    if word in stop_words:
+                    if word.lower() in stop_words:
                         continue
-                    if any(number in word for number in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']):
+                    if "+" in word or "|" in word or "@" in word:
                         continue
                     sentence.append(word)
         res.append(" ".join(sentence))
     return res
 
 def calculate_tfidf(stemmed_tweets):
-    vectorizer = TfidfVectorizer()
+    print('calculating tfidf')
+    vectorizer = TfidfVectorizer(ngram_range=(1, 1))
     X = vectorizer.fit_transform(stemmed_tweets)
-    X_words = vectorizer.get_feature_names()
+    X_words = np.array(vectorizer.get_feature_names())
     return X, X_words
 
 
@@ -73,7 +79,7 @@ def format_text(text):
     t = re.sub(r'http\S+', '', t)
 
     # remove Steuersymbole/andere Zeichen
-    t = re.sub(r'[\n\t\ \"\':+?!]+', ' ', t)
+    t = re.sub(r'[\n\t\ \"\':+?!.]+', ' ', t)
 
     # remove \xad
     t = re.sub(r'\xad', '', t)
