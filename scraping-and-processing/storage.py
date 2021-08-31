@@ -3,7 +3,7 @@ import json
 
 import pandas as pd
 from glob import glob
-from .processing import analyser
+from processing import analyser
 
 
 class Storage:
@@ -35,11 +35,11 @@ class Category:
         
         self.name = path[path[:-1].rindex('\\') + 1:-1]
         self.path = path
-        with open(self.path + 'config.json', 'r') as f:
+        with open(self.path + 'config.json', 'r', encoding='utf-8') as f:
             self.config = json.load(f)
-        with open(self.path + 'stopwords.json', 'r') as f:
+        with open(self.path + 'stopwords.json', 'r', encoding='utf-8') as f:
             self.stopwords = json.load(f)
-        with open(self.path + 'keywords.json', 'r') as f:
+        with open(self.path + 'keywords.json', 'r', encoding='utf-8') as f:
             self.keywords = json.load(f)
         self.data = pd.read_csv(path + 'data.csv')
 
@@ -49,4 +49,5 @@ class Category:
     def __str__(self):
         return 'Category:\t' + self.name + '\nLang:\t\t' + self.config['lang'] + '\nKeywords:\t' + str(len(self.keywords)) + '\nStopwords:\t' + str(len(self.stopwords)) + '\nText entries:\t' + str(len(self.data)) + '\nDates:\t\t' + self.config['start_date'] + ' -- ' + self.config['end_date']
 
-    
+    def analyse(self):
+        return analyser.analyse(self)
