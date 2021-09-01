@@ -14,11 +14,11 @@ const width = document.getElementById('graph').clientWidth;
 const height = document.getElementById('graph').clientHeight;
 
 // scaling by .85 to leave space for labeling
-const center = Math.min(width / 2, height / 2) * 0.9
+const center = Math.min(width / 2, height / 2) * 0.85
 
-// needs to be extracted from meta-data
+// is set by meta-data
 var max_day = 458;
-const start_date = "2020-01-07"; // YYYY-MM-DD
+const start_date = '2020-01-07'; // YYYY-MM-DD
 
 var start_day = 0;
 var end_day = max_day;
@@ -88,14 +88,14 @@ function color_to_hex(c_arr) {
 const vis = d3.select('#graph')
   .append('svg')
   .attr('id', 'svg')
-  .attr("width", "100%")
-  .attr("height", "100%");
+  .attr('width', '100%')
+  .attr('height', '100%');
 
-const dates = vis.append("g").attr('id', 'dates');
-const lines = vis.append("g").attr('id', 'lines');
-const arcs = vis.append("g").attr('id', 'arcs');
+const dates = vis.append('g').attr('id', 'dates');
+const lines = vis.append('g').attr('id', 'lines');
+const arcs = vis.append('g').attr('id', 'arcs');
 
-// var g = vis.append("g").attr("transform", `translate(${width / 2}, ${height / 2})`);
+// var g = vis.append('g').attr('transform', `translate(${width / 2}, ${height / 2})`);
 
 
 // main creation
@@ -125,14 +125,13 @@ function create_slider(start_date, max_day) {
   }
 }
 
-function update_graph(start_d, end_d) {
+function update_graph(start, end) {
 
-  var current_arcs = [];
   let data = loaded_data;
 
-  start_day = start_d
-  end_day = end_d
-
+  // update global variables
+  start_day = start
+  end_day = end
   total_days = end_day - start_day
 
   let arc_data = [];
@@ -143,21 +142,21 @@ function update_graph(start_d, end_d) {
 
     for (let j = 0; j < data[i].d.length; j++) {
 
+      //check if there is any overlap
       if (data[i].d[j][1] <= start_day || data[i].d[j][0] >= end_day) {
         continue
       }
       changed = true
 
-      // to satisfy d3 syntax this has to be done
+      // preparing date for arc creation
       arc_data.push({
-        'id': `${i}-${j}`,
+        'id': (i - empty_arcs)*data.length + j,
         'ind': i - empty_arcs,
         'word': data[i].w,
         'days': data[i].d,
         'start': Math.max(data[i].d[j][0], start_day),
         'end': Math.min(data[i].d[j][1] - 1, end_day)
       })
-      current_arcs.push(`${i}-${j}`)
     }
     if (!changed) {
       empty_arcs++
@@ -165,9 +164,11 @@ function update_graph(start_d, end_d) {
     }
   }
 
-  // store length of data - equal to the number of different words
-  n = arc_data[arc_data.length - 1].ind + 1// hardcoded um Sachen zu testen :D max: 148 bzw data.length
-  line_width = (center * 0.75 - inner_offset) / n
+  //equal to the number of different words in given time intervall
+  var n = data.length - empty_arcs
+
+  //update of global variables used to generate arcs, lines and dates
+  line_width = (center * 0.8 - inner_offset) / n
   line_gap = line_width * 0.25
   skip_rings = Math.ceil(n / 25) // number of rings where no dotted line should be drawn
 
@@ -184,7 +185,7 @@ function update_graph(start_d, end_d) {
       let outer_x = Math.sin(angle) * center;
       let outer_y = -Math.cos(angle) * center;
 
-      lable_data.push({ 'day': start_day + i, 'angle': angle, 'o_x': outer_x, 'o_y': outer_y })
+      lable_data.push({ 'date': start_day + i, 'angle': angle, 'o_x': outer_x, 'o_y': outer_y })
 
       j = 1;
     } else {
@@ -197,6 +198,7 @@ function update_graph(start_d, end_d) {
   update_dates();
 
   update_arcs();
+
   // circle bars
   function update_arcs() {
     let u = arcs.selectAll('.graph_arc')
@@ -205,12 +207,12 @@ function update_graph(start_d, end_d) {
     let total_arcs = arc_data[arc_data.length - 1].ind + 1
 
     u.enter()
-      .append("path")
-      .attr("class", function (d) { return `graph_arc ${d.word}` })
-      .on("mouseover", handleMouseOver)
-      .on("mouseout", handleMouseOut)
-      .on("click", handleMouseClick)
-      .attr("transform", `translate(${width / 2}, ${height / 2})`)
+      .append('path')
+      .attr('class', function (d) { return `graph_arc ${d.word}` })
+      .on('mouseover', handleMouseOver)
+      .on('mouseout', handleMouseOut)
+      .on('click', handleMouseClick)
+      .attr('transform', `translate(${width / 2}, ${height / 2})`)
       .merge(u)
       .transition()
       .duration(transition_time)
@@ -229,18 +231,18 @@ function update_graph(start_d, end_d) {
       .data(lable_data, function (d) { return d.day; });
 
     u.enter()
-      .append("line")
-      .attr("class", function (d) { return `graph_line`; })
-      .attr("id", function (d) { return d.day; })
-      .attr("transform", function (d) { return `translate(${width / 2}, ${height / 2})`; })
+      .append('line')
+      .attr('class', 'graph_line')
+      .attr('id', function (d) { return d.day; })
+      .attr('transform', function (d) { return `translate(${width / 2}, ${height / 2})`; })
       .merge(u)
       .transition()
       .duration(transition_time)
-      .attr("x1", function (d) { return Math.sin(d.angle) * (inner_offset + 0.5 * (line_width - line_gap)); }) // x position of the first end of the line
-      .attr("y1", function (d) { return -Math.cos(d.angle) * (inner_offset + 0.5 * (line_width - line_gap)); }) // y position of the first end of the line
-      .attr("x2", function (d) { return d.o_x * 0.92; }) // x position of the second end of the line
-      .attr("y2", function (d) { return d.o_y * 0.92; })
-      .attr("stroke-dasharray", `${line_gap}, ${(line_width + line_gap) * skip_rings - line_gap}`);
+      .attr('x1', function (d) { return Math.sin(d.angle) * (inner_offset + 0.5 * (line_width - line_gap)); }) // x position of the first end of the line
+      .attr('y1', function (d) { return -Math.cos(d.angle) * (inner_offset + 0.5 * (line_width - line_gap)); }) // y position of the first end of the line
+      .attr('x2', function (d) { return d.o_x * 0.92; }) // x position of the second end of the line
+      .attr('y2', function (d) { return d.o_y * 0.92; })
+      .attr('stroke-dasharray', `${line_gap}, ${(line_width + line_gap) * skip_rings - line_gap}`);
 
     u.exit().remove()
   }
@@ -250,19 +252,19 @@ function update_graph(start_d, end_d) {
       .data(lable_data, function (d) { return d.day; });
 
     u.enter()
-      .append("text")
-      .attr("text-anchor", "middle")
-      .attr("class", function (d) { return `graph_date`; })
-      .attr("id", function (d) { return d.day; })
-      .attr("transform", function (d) { return `translate(${width / 2}, ${height / 2})rotate(${270 + d.angle * 180 / Math.PI})`; })
-      .on("click", handleDateClick)
+      .append('text')
+      .attr('text-anchor', 'middle')
+      .attr('class', 'graph_date')
+      .attr('id', function (d) { return d.date; })
+      .attr('transform', function (d) { return `translate(${width / 2}, ${height / 2})rotate(${270 + d.angle * 180 / Math.PI})`; })
+      .on('click', handleDateClick)
+      .attr('dominant-baseline', 'central')
       .merge(u)
       .transition()
       .duration(transition_time)
       .text(function (d) { return `${get_date(d.day)}`; })
-      .attr("dominant-baseline", "central")
-      .attr("transform", function (d) { return `translate(${d.o_x * 1.02 + width / 2},${d.o_y * 1.02 + height / 2})rotate(${270 + d.angle * 180 / Math.PI})`; })
-      .style("font-size", `${center / 25}`);
+      .attr('transform', function (d) { return `translate(${d.o_x * 1.02 + width / 2},${d.o_y * 1.02 + height / 2})rotate(${270 + d.angle * 180 / Math.PI})`; })
+      .style('font-size', `${center / 25}`);
 
     u.exit().remove()
   }
