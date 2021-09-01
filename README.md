@@ -1,6 +1,5 @@
-# Over-Time-Worldclouds
+# Word Frequency Visualization
 This is the project for my bachelor thesis.
 
 # Goal
-Create Wordcoulds that change smoothly over time.
-Im planing to use Instagram and Twitter post as data.
+Create a visualization to shows the most relevant words in a given Intervall
