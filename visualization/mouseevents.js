@@ -24,14 +24,14 @@ plot.append("g")
 
 function handleMouseOver(mouse_event, data) {
     // #15DB95 accent color from pallet
-    if (data.word != clicked_word) {
-        d3.selectAll(`.${data.word}`).style('fill', '#ffb648')
+    if (`_${data.word}` != clicked_word) {
+        d3.selectAll(`._${data.word}`).style('fill', '#ffb648')
     }
 }
 
 function handleMouseOut(mouse_event, data) {
-    if (data.word != clicked_word) {
-        d3.selectAll(`.${data.word}`).style('fill', data.color)
+    if (`_${data.word}` != clicked_word) {
+        d3.selectAll(`._${data.word}`).style('fill', data.color)
     }
 }
 
@@ -44,8 +44,8 @@ function handleMouseClick(mouse_event, data) {
 
     if (word != clicked_word) {
         d3.selectAll(`.${clicked_word}`).style('fill', data.color)
-        d3.selectAll(`.${word}`).style('fill', '#15DB95')
-        clicked_word = word;
+        d3.selectAll(`._${word}`).style('fill', '#15DB95')
+        clicked_word = `_${word}`;
         document.getElementById("word_lable").innerHTML = word;
         document.getElementById("dt_first").innerHTML = get_date(data.days[0][0])
         document.getElementById("dt_last").innerHTML = get_date(data.days[data.days.length - 1][1] - 1)
@@ -86,7 +86,8 @@ function handleDateClick(mouse_event, data) {
 
         var layout = cloud()
             .size([wc_rect.width, wc_rect.height])
-            .words(json_data.words.map(function (d) {
+            .words(json_data.w.map(function (d) {
+                // TODO actually use weights
                 return { text: d, size: 24 * (0.5 + Math.random()) }
             }))
             .fontSize(function (d) { return d.size })
@@ -94,7 +95,6 @@ function handleDateClick(mouse_event, data) {
         layout.start()
     })
 
-    console.log(day)
 }
 
 function update_plot(data) {

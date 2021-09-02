@@ -18,11 +18,11 @@ const center = Math.min(width / 2, height / 2) * 0.85
 
 // is set by meta-data
 var max_day = 458;
-const start_date = '2020-01-07'; // YYYY-MM-DD
+var start_date = '2020-01-07'; // YYYY-MM-DD
 
 var start_day = 0;
 var end_day = max_day;
-const start_timestamp = Date.parse(start_date)
+var start_timestamp = Date.parse(start_date)
 
 var total_days = end_day - start_day
 
@@ -73,14 +73,22 @@ const arcs = vis.append('g').attr('id', 'arcs');
 // main creation
 $.getJSON(`/data/${category}/main.json`, function (data) {
 
-  loaded_data = data;
+  loaded_data = data.data;
+
+  // updating global scope
+  max_day = data.meta['total_days'];
+  start_date = data.meta['start_date']; // YYYY-MM-DD
+  start_timestamp = Date.parse(start_date)
+  start_day = 0;
+  end_day = max_day;
+  total_days = end_day - start_day
 
   update_graph(0, max_day);
 
-  create_slider(start_date, max_day);
+  create_slider(max_day);
 });
 
-function create_slider(start_date, max_day) {
+function create_slider(max_day) {
   $('#slider').slider({
     min: 0,
     max: max_day,
@@ -157,7 +165,7 @@ function update_graph(start, end) {
       let outer_x = Math.sin(angle) * center;
       let outer_y = -Math.cos(angle) * center;
 
-      lable_data.push({ 'date': start_day + i, 'angle': angle, 'o_x': outer_x, 'o_y': outer_y })
+      lable_data.push({ 'day': start_day + i, 'angle': angle, 'o_x': outer_x, 'o_y': outer_y })
 
       j = 1;
     } else {
@@ -180,14 +188,21 @@ function update_graph(start, end) {
 
     u.enter()
       .append('path')
-      .attr('class', function (d) { return `graph_arc ${d.word}` })
       .on('mouseover', handleMouseOver)
       .on('mouseout', handleMouseOut)
       .on('click', handleMouseClick)
       .attr('transform', `translate(${width / 2}, ${height / 2})`)
+      .attr('d', d3.arc()
+        .innerRadius((d) => inner_offset )
+        .outerRadius((d) => inner_offset + line_width)
+        .startAngle((d) => day_to_radians(d.start - start_day) + rotation_angle)
+        .endAngle((d) => day_to_radians(d.end - start_day) + rotation_angle))
+      
       .merge(u)
       .transition()
       .duration(transition_time)
+
+      .attr('class', function (d) { return `graph_arc _${d.word}` })
       .attr('d', d3.arc()
         .innerRadius((d) => inner_offset + (line_width + line_gap) * d.ind)
         .outerRadius((d) => inner_offset + (line_width + line_gap) * d.ind + line_width)
@@ -205,7 +220,6 @@ function update_graph(start, end) {
     u.enter()
       .append('line')
       .attr('class', 'graph_line')
-      .attr('id', function (d) { return d.day; })
       .attr('transform', function (d) { return `translate(${width / 2}, ${height / 2})`; })
       .merge(u)
       .transition()
@@ -227,7 +241,6 @@ function update_graph(start, end) {
       .append('text')
       .attr('text-anchor', 'middle')
       .attr('class', 'graph_date')
-      .attr('id', function (d) { return d.date; })
       .attr('transform', function (d) { return `translate(${width / 2}, ${height / 2})rotate(${270 + d.angle * 180 / Math.PI})`; })
       .on('click', handleDateClick)
       .attr('dominant-baseline', 'central')
