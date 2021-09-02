@@ -8,7 +8,7 @@ def write_json(data, file):
         f.close()
 
 
-def export_main(data, meta_data, category):
+def export_main(data, meta_data, path):
     """
     Exports main.json
     :param data: [{'day': <>, 'words': [<>], 'weights': [<>]]
@@ -38,18 +38,18 @@ def export_main(data, meta_data, category):
                     continue
                 else:
                     main_days.append([start_day, j + 1])
-            main.append({"w": i.upper(), "d": main_days})
-    write_json({'meta': meta_data, 'data': main}, "../../visualization/data/" + category + "/main.json")
+            main.append({'w': i.upper(), 'd': main_days})
+    write_json({'meta': meta_data, 'data': main}, path + 'export/main.json')
 
 
 
-def export_days(data, category):
+def export_days(data, path):
     for day in data:
-        day_dic = {'w': [i.upper() for i in day['words']], 'r': ["{:.5f}".format(i) for i in day['weights']]}
-        write_json(day_dic, "../../visualization/data/" + category + "/days/" + str(day['day']) + ".json")
+        day_dic = {'w': [i.upper() for i in day['words']], 'r': [float(f'{i:1.5f}') for i in day['weights']]}
+        write_json(day_dic, path + 'export/days/' + str(day['day']) + '.json')
 
 
-def export_words(data, category):
+def export_words(data, path):
     word_dic_words = {}
     for day in data:
         for w_ind, word in enumerate(day['words']):
@@ -60,17 +60,21 @@ def export_words(data, category):
                 word_dic_words[word] = [day['weights'][w_ind]]
 
     for word in word_dic_words:
-        write_json(["{:.5f}".format(i) for i in word_dic_words[word]], '../../visualization/data/' + category + '/words/' + word + '.json')
+        write_json([float(f'{i:1.5f}') for i in word_dic_words[word]], path +'export/words/' + word + '.json')
 
 
-def export(data, start_date, total_days, category):
-    """
+def export(Category):
+    '''
     data: [{'day': <>, 'words': [<>], 'weights': [<>]]
-    """
+    '''
+    start_date = str(min(Category.data['date']))[:10]
+    data = Category.analysed_data
+    path = Category.path
+
     meta_data = {'start_date': start_date, 'total_days': len(data)}
 
-    export_days(data, category)
+    export_days(data, path)
 
-    export_words(data, category)
+    export_words(data, path)
 
-    export_main(data, meta_data, category)
+    export_main(data, meta_data, path)

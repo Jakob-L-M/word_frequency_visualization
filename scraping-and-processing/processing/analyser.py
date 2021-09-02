@@ -12,6 +12,8 @@ def analyse(Category):
     
     df = Category.data
 
+    df['date'] = pd.to_datetime(df['date'])
+
     date_range = pd.date_range(str(min(df['date']))[:10], str(max(df['date']))[:10])
     
     day_smoothing = Category.config['day_smoothing']
@@ -22,9 +24,8 @@ def analyse(Category):
     
     X, X_words = calculate_tfidf(stemmed_tweets)
     
-    print('building output')
     date_arr = []
-    for day in tqdm(range(0, len(date_range))):
+    for day in tqdm(range(0, len(date_range)), desc='building output'):
         arr = np.array(np.sum(X[max(0, day - day_smoothing): min(len(date_range), day + 1 + day_smoothing)], axis=0))[0]
         words = X_words[arr != 0]
         arr = arr[arr != 0]
@@ -34,19 +35,18 @@ def analyse(Category):
         temp = {'day': day, 'words': [], 'weights': []}
         for i in range(0, len(top_k_ind)):
             temp['words'].append(words[top_k_ind[i][0]].upper())
-            temp['weights'].append(f'{top_k_w[i]:.5f}')
+            temp['weights'].append(float(f'{top_k_w[i]:.5f}'))
         date_arr.append(temp)
 
     return date_arr
 
 
 def build_stemed_day_array(df, date_range, stop_words, lang):
-    print('Stemming Tweets')
     tagger = TreeTagger(TAGLANG=lang, TAGDIR='./TreeTagger')
     res = []
-    for i in tqdm(date_range):
+    for i in tqdm(date_range, desc='Stemming Tweets'):
         sentence = []
-        for tweet in df[np.logical_and(df['date'] > str(i), df['date'] < str(i+pd.DateOffset(1)))]['text']:
+        for tweet in df[np.logical_and(df['date'] > i, df['date'] < i+pd.DateOffset(1))]['text']:
             tweet = format_text(tweet)
             if tweet != '':
                 for word in [j.split('\t')[2] for j in tagger.tag_text(tweet)]:
