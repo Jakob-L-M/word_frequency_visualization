@@ -31,34 +31,6 @@ function day_to_radians(day) {
   return result * (Math.PI / 180); // converting to radians
 }
 
-function make_arc(id, days) {
-
-  // if days end before the interval or begin after the intervall
-  if (days[1] <= start_day || days[0] >= end_day) {
-    return null
-  }
-
-  let innerRadius = inner_offset + (line_width + line_gap) * id;
-
-  let arc = d3.arc()
-    .innerRadius(innerRadius)
-    .outerRadius(innerRadius + line_width)
-
-  if (start_day < days[0]) {
-    arc.startAngle(day_to_radians(days[0] - start_day) + rotation_angle)
-  } else {
-    arc.startAngle(day_to_radians(0) + rotation_angle)
-  }
-
-  if (end_day > days[1]) {
-    arc.endAngle(day_to_radians(days[1] - start_day) + rotation_angle)
-  } else {
-    arc.endAngle(day_to_radians(total_days) + rotation_angle)
-  }
-
-  return arc
-}
-
 function get_color(i, n) {
   //colors from color pallet
   let c1 = [209, 232, 226] // [0, 1/2)
@@ -150,12 +122,12 @@ function update_graph(start, end) {
 
       // preparing date for arc creation
       arc_data.push({
-        'id': (i - empty_arcs)*data.length + j,
+        'id': (i - empty_arcs) * data.length + j,
         'ind': i - empty_arcs,
         'word': data[i].w,
         'days': data[i].d,
         'start': Math.max(data[i].d[j][0], start_day),
-        'end': Math.min(data[i].d[j][1] - 1, end_day)
+        'end': Math.min(data[i].d[j][1], end_day)
       })
     }
     if (!changed) {
@@ -168,9 +140,9 @@ function update_graph(start, end) {
   var n = data.length - empty_arcs
 
   //update of global variables used to generate arcs, lines and dates
-  line_width = (center * 0.8 - inner_offset) / n
+  line_width = ((center - inner_offset)*0.8) / n
   line_gap = line_width * 0.25
-  skip_rings = Math.ceil(n / 25) // number of rings where no dotted line should be drawn
+  skip_rings = Math.floor(n / 25) // number of rings where no dotted line should be drawn
 
   let j = 1; // Variable to ensure we get a maximum of 100 lines
 
@@ -180,7 +152,7 @@ function update_graph(start, end) {
   for (let i = 0; i < total_days; i++) {
     if (total_days / j < 100) {
 
-      let angle = (((360 - angle_gap) * (i + 0.5) / total_days + angle_gap / 2) * (Math.PI) / 180)
+      let angle = day_to_radians(i + 0.5) //prob -0.5
 
       let outer_x = Math.sin(angle) * center;
       let outer_y = -Math.cos(angle) * center;
@@ -238,11 +210,11 @@ function update_graph(start, end) {
       .merge(u)
       .transition()
       .duration(transition_time)
-      .attr('x1', function (d) { return Math.sin(d.angle) * (inner_offset + 0.5 * (line_width - line_gap)); }) // x position of the first end of the line
-      .attr('y1', function (d) { return -Math.cos(d.angle) * (inner_offset + 0.5 * (line_width - line_gap)); }) // y position of the first end of the line
-      .attr('x2', function (d) { return d.o_x * 0.92; }) // x position of the second end of the line
-      .attr('y2', function (d) { return d.o_y * 0.92; })
-      .attr('stroke-dasharray', `${line_gap}, ${(line_width + line_gap) * skip_rings - line_gap}`);
+      .attr('x1', function (d) { return Math.sin(d.angle) * (inner_offset + 0.5 * (line_width - line_gap)); }) // x position of the inner end of the line
+      .attr('y1', function (d) { return -Math.cos(d.angle) * (inner_offset + 0.5 * (line_width - line_gap)); }) // y position of the inner end of the line
+      .attr('x2', function (d) { return d.o_x }) // x position of the outer end of the line
+      .attr('y2', function (d) { return d.o_y }) // y position of the outer end of the line
+      .attr('stroke-dasharray', `${line_gap}, ${(line_width + line_gap) * skip_rings + line_width}`);
 
     u.exit().remove()
   }
@@ -263,7 +235,7 @@ function update_graph(start, end) {
       .transition()
       .duration(transition_time)
       .text(function (d) { return `${get_date(d.day)}`; })
-      .attr('transform', function (d) { return `translate(${d.o_x * 1.02 + width / 2},${d.o_y * 1.02 + height / 2})rotate(${270 + d.angle * 180 / Math.PI})`; })
+      .attr('transform', function (d) { return `translate(${d.o_x * 1.07 + width / 2},${d.o_y * 1.07 + height / 2})rotate(${270 + d.angle * 180 / Math.PI})`; })
       .style('font-size', `${center / 25}`);
 
     u.exit().remove()
