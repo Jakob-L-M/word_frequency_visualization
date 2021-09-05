@@ -84,12 +84,14 @@ function handleDateClick(mouse_event, data) {
     document.getElementById('day_lable').innerHTML = get_date(day)
     $.getJSON(`/data/${category}/days/${day}.json`, function (json_data) {
 
+        let words = []
+        for (let i=0; i < json_data.w.length; i++) {
+            words.push({text: json_data.w[i], size: wc_rect.width*(json_data.r[i])})
+        }
+
         var layout = cloud()
             .size([wc_rect.width, wc_rect.height])
-            .words(json_data.w.map(function (d) {
-                // TODO actually use weights
-                return { text: d, size: 24 * (0.5 + Math.random()) }
-            }))
+            .words(words)
             .fontSize(function (d) { return d.size })
             .on("end", draw_cloud)
         layout.start()

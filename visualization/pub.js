@@ -130,7 +130,7 @@ function update_graph(start, end) {
 
       // preparing date for arc creation
       arc_data.push({
-        'id': (i - empty_arcs) * data.length + j,
+        'id': i * data.length + j,
         'ind': i - empty_arcs,
         'word': data[i].w,
         'days': data[i].d,
