@@ -1,3 +1,4 @@
+const wc_rect = (document.getElementById('day_word_cloud').getClientRects())[0]
 var clicked_word;
 var margin = { top: 10, right: 30, bottom: 30, left: 50 }
 const plot_width = document.getElementById('w_plot').clientWidth - margin.left - margin.right,
@@ -9,6 +10,11 @@ var plot = d3.selectAll('#w_plot')
     .attr('height', plot_height + margin.top + margin.bottom)
     .append('g')
     .attr('transform', `translate(${margin.left},${margin.top})`);
+
+var w_cloud = d3.selectAll('#day_word_cloud')
+    .append('svg')
+    .attr('width', wc_rect.width)
+    .attr('height', wc_rect.height)
 
 var x = d3.scaleLinear().range([0, plot_width + 20]);
 var xAxis = d3.axisBottom().scale(x);
@@ -25,7 +31,7 @@ plot.append("g")
 function handleMouseOver(mouse_event, data) {
     // #15DB95 accent color from pallet
     if (`_${data.word}` != clicked_word) {
-        d3.selectAll(`._${data.word}`).style('fill', '#ffb648')
+        d3.selectAll(`._${data.word}`).style('fill', '#FFA34C')
     }
 }
 
@@ -74,7 +80,6 @@ function handleMouseClick(mouse_event, data) {
     }
 }
 
-const wc_rect = (document.getElementById('day_word_cloud').getClientRects())[0]
 
 function handleDateClick(mouse_event, data) {
     let day = data.day
@@ -129,28 +134,27 @@ function update_plot(data) {
             .x(function (d) { return x(d.x); })
             .y(function (d) { return y(d.y); }))
         .attr("fill", "none")
-        .attr("stroke", "steelblue")
+        .attr("stroke", "#244AB3")
         .attr("stroke-width", 2.5)
 }
 
 function draw_cloud(words) {
 
-    document.getElementById('day_word_cloud').innerHTML = ''
+    let u = w_cloud.selectAll('.cloud_text')
+        .data(words, function(d) {return d.text})
 
-    d3.select("#day_word_cloud").append("svg")
-        .attr("width", wc_rect.width)
-        .attr("height", wc_rect.height)
-        .append("g")
-        .attr("transform", `translate(${wc_rect.width / 2},${wc_rect.height / 2})`)
-        .selectAll("text")
-        .data(words)
-        .enter().append("text")
-        .style("font-size", function (d) { return d.size + "px"; })
-        .style("font-family", "Impact")
-        .style("fill", "steelblue")
-        .attr("text-anchor", "middle")
-        .attr("transform", function (d) {
-            return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
-        })
-        .text(function (d) { return d.text; });
+
+    u.enter()
+        .append('text')
+        .attr('class', 'cloud_text')
+        .attr('transform', `translate(${wc_rect.width/2},${wc_rect.height/2})`)
+        .merge(u)
+        .transition()
+        .duration(500)
+        .text((d) => d.text)
+        .style("font-size", (d) => `${d.size}px`)
+        .attr("transform", (d) => `translate(${[d.x+wc_rect.width/2, d.y+wc_rect.height/2]})rotate(${d.rotate})`)
+        .attr('fill', color_to_hex(get_color2(Math.random())));
+    
+    u.exit().remove()
 }

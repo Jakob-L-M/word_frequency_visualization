@@ -14,7 +14,7 @@ const width = document.getElementById('graph').clientWidth;
 const height = document.getElementById('graph').clientHeight;
 
 // scaling by .85 to leave space for labeling
-const center = Math.min(width / 2, height / 2) * 0.85
+const center = Math.min(width / 2, height / 2) * 0.8
 
 // is set by meta-data
 var max_day = 458;
@@ -33,21 +33,21 @@ function day_to_radians(day) {
 
 function get_color(i, n) {
   //colors from color pallet
-  let c1 = [209, 232, 226] // [0, 1/2)
-  let c2 = [46, 156, 202] // 
-  let c3 = [41, 100, 138] // [1/2, 1]
+  let c1 = [36, 74, 179] // [0, 1/2)
+  let c2 = [64, 115, 255] // [1/2, 1]
 
   let pos = i / n // intervall [0, 1]
 
-  if (pos < 1 / 2) {
-    pos *= 2
-    return [Math.round((1 - pos) * c1[0] + pos * c2[0]), Math.round((1 - pos) * c1[1] + pos * c2[1]), Math.round((1 - pos) * c1[2] + pos * c2[2])]
-  } else {
-    pos = (pos * 2) - 1
-    return [Math.round((1 - pos) * c2[0] + pos * c3[0]), Math.round((1 - pos) * c2[1] + pos * c3[1]), Math.round((1 - pos) * c2[2] + pos * c3[2])]
-  }
+  return [Math.round((1 - pos) * c1[0] + pos * c2[0]), Math.round((1 - pos) * c1[1] + pos * c2[1]), Math.round((1 - pos) * c1[2] + pos * c2[2])]
 }
+function get_color2(pos) {
+  //colors from color pallet
+  //method for generating greens
+  let c1 = [89, 255, 198] // [0, 1/2)
+  let c2 = [71, 179, 142] // [1/2, 1]
 
+  return [Math.round((1 - pos) * c1[0] + pos * c2[0]), Math.round((1 - pos) * c1[1] + pos * c2[1]), Math.round((1 - pos) * c1[2] + pos * c2[2])]
+}
 function get_date(i) {
   let date_str = new Date(i * 86400000 + start_timestamp).toDateString()
   return date_str.substr(8, 2) + date_str.substr(3, 4) + date_str.substr(10, 5)
@@ -242,13 +242,13 @@ function update_graph(start, end) {
       .attr('text-anchor', 'middle')
       .attr('class', 'graph_date')
       .attr('transform', function (d) { return `translate(${width / 2}, ${height / 2})rotate(${270 + d.angle * 180 / Math.PI})`; })
-      .on('click', handleDateClick)
       .attr('dominant-baseline', 'central')
+      .on('click', handleDateClick)
       .merge(u)
       .transition()
       .duration(transition_time)
       .text(function (d) { return `${get_date(d.day)}`; })
-      .attr('transform', function (d) { return `translate(${d.o_x * 1.07 + width / 2},${d.o_y * 1.07 + height / 2})rotate(${270 + d.angle * 180 / Math.PI})`; })
+      .attr('transform', function (d) { return `translate(${d.o_x * 1.12 + width / 2},${d.o_y * 1.12 + height / 2})rotate(${270 + d.angle * 180 / Math.PI})`; })
       .style('font-size', `${center / 25}`);
 
     u.exit().remove()
