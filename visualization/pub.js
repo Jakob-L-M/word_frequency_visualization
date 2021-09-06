@@ -109,7 +109,7 @@ function create_slider(max_day) {
   }
 
   function slide(d){
-    document.getElementById('date_range').innerHTML = `${get_date(d.value[0])}  --  ${get_date(d.value[1])}`
+    document.getElementById('date_range').innerHTML = `${get_date(d.value[0])}  --  ${get_date(d.value[1] - 1)}`
   }
 }
 
