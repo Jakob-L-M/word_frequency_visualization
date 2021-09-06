@@ -90,6 +90,7 @@ $.getJSON(`/data/${category}/main.json`, function (data) {
 
 function create_slider(max_day) {
   $('#slider').slider({
+    id: 'slider',
     min: 0,
     max: max_day,
     range: true,
@@ -97,11 +98,18 @@ function create_slider(max_day) {
     tooltip: 'hidden',
     tooltip_split: true,
   }).on('slideStop', callback)
+  .on('slide', slide)
 
+
+  document.getElementById('date_range').innerHTML = `${get_date(0)}  --  ${get_date(max_day)}`
   function callback(d) {
     if (d.value[0] != d.value[1]) {
       update_graph(d.value[0], d.value[1])
     }
+  }
+
+  function slide(d){
+    document.getElementById('date_range').innerHTML = `${get_date(d.value[0])}  --  ${get_date(d.value[1])}`
   }
 }
 
