@@ -10,5 +10,5 @@ visualization/page.zip
 *.pyc
 *.csv
 .vscode/
-config.json
+*config.json
 TreeTagger/
