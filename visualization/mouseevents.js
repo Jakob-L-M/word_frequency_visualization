@@ -52,6 +52,21 @@ function handleMouseClick(mouse_event, data) {
         d3.selectAll(`.${clicked_word}`).style('fill', data.color)
         d3.selectAll(`._${word}`).style('fill', '#15DB95')
         clicked_word = `_${word}`;
+        
+
+        const context = document.createElement("canvas").getContext("2d");
+        var fontSize = 6
+        context.font = `${fontSize}vw Ubuntu`
+
+        var diff = context.measureText(word).width - document.getElementById("word_lable").clientWidth
+
+        while (diff > 0) {
+            fontSize = fontSize - Math.max(0.1, diff/100)
+            context.font =  `${fontSize}vw Ubuntu`
+            diff = context.measureText(word).width - document.getElementById("word_lable").clientWidth
+        }
+        
+        document.getElementById("word_lable").style.fontSize = `${fontSize}vw`
         document.getElementById("word_lable").innerHTML = word;
         document.getElementById("dt_first").innerHTML = get_date(data.days[0][0])
         document.getElementById("dt_last").innerHTML = get_date(data.days[data.days.length - 1][1] - 1)
