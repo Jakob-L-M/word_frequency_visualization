@@ -17,7 +17,7 @@ var w_cloud = d3.selectAll('#day_word_cloud')
     .attr('height', wc_rect.height)
 
 var x = d3.scaleLinear().range([0, plot_width + 20]);
-var xAxis = d3.axisBottom().scale(x);
+var xAxis = d3.axisBottom().scale(x).ticks(5).tickFormat((d) => get_date(d));
 plot.append("g")
     .attr("transform", `translate(0,${plot_height})`)
     .attr("class", "x_axis")

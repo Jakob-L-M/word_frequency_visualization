@@ -19,6 +19,11 @@ body {
     pointer-events: none;
 }
 
+.x_axis, .y_axis {
+    color: #47b38e;
+    font-family: 'Ubuntu', sans-serif;
+}
+
 #graph {
     position: absolute;
     top: 3%;
