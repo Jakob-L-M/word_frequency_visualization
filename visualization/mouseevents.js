@@ -33,6 +33,7 @@ function handleMouseOver(mouse_event, data) {
     if (`_${data.word}` != clicked_word) {
         d3.selectAll(`._${data.word}`).style('fill', '#FFA34C')
     }
+    console.log(data.word)
 }
 
 function handleMouseOut(mouse_event, data) {
@@ -61,7 +62,7 @@ function handleMouseClick(mouse_event, data) {
         var diff = context.measureText(word).width - document.getElementById("word_lable").clientWidth
 
         while (diff > 0) {
-            fontSize = fontSize - Math.max(0.1, diff/100)
+            fontSize = fontSize - 0.2
             context.font =  `${fontSize}vw Ubuntu`
             diff = context.measureText(word).width - document.getElementById("word_lable").clientWidth
         }
