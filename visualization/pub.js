@@ -67,8 +67,6 @@ const dates = vis.append('g').attr('id', 'dates');
 const lines = vis.append('g').attr('id', 'lines');
 const arcs = vis.append('g').attr('id', 'arcs');
 
-// var g = vis.append('g').attr('transform', `translate(${width / 2}, ${height / 2})`);
-
 
 // main creation
 $.getJSON(`/data/${category}/main.json`, function (data) {
@@ -227,8 +225,8 @@ function update_graph(start, end) {
 
     u.enter()
       .append('line')
-      .attr('class', 'graph_line')
-      .attr('transform', function (d) { return `translate(${width / 2}, ${height / 2})`; })
+      .attr('class', (d) => `graph_line _${d.day}`)
+      .attr('transform',`translate(${width / 2}, ${height / 2})`)
       .merge(u)
       .transition()
       .duration(transition_time)
@@ -248,10 +246,12 @@ function update_graph(start, end) {
     u.enter()
       .append('text')
       .attr('text-anchor', 'middle')
-      .attr('class', 'graph_date')
+      .attr('class', (d) => `graph_date _${d.day}`)
       .attr('transform', function (d) { return `translate(${width / 2}, ${height / 2})rotate(${270 + d.angle * 180 / Math.PI})`; })
       .attr('dominant-baseline', 'central')
       .on('click', handleDateClick)
+      .on('mouseover', handleDateOver)
+      .on('mouseout', handleDateOut)
       .merge(u)
       .transition()
       .duration(transition_time)

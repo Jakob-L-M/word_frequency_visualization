@@ -1,5 +1,6 @@
 const wc_rect = (document.getElementById('day_word_cloud').getClientRects())[0]
 var clicked_word;
+var clicked_day;
 var margin = { top: 10, right: 30, bottom: 30, left: 50 }
 const plot_width = document.getElementById('w_plot').clientWidth - margin.left - margin.right,
     plot_height = document.getElementById('w_plot').clientHeight - margin.top - margin.bottom
@@ -44,6 +45,8 @@ function handleMouseOut(mouse_event, data) {
 }
 
 function handleMouseClick(mouse_event, data) {
+
+    document.getElementById('word_preview').innerHTML = ""
 
     document.getElementById('detail_words').style.visibility = 'visible'
     document.getElementById('detail_day').style.visibility = 'hidden'
@@ -118,6 +121,22 @@ function handleDateClick(mouse_event, data) {
             .on("end", draw_cloud)
         layout.start()
     })
+
+}
+
+function handleDateOver(mouse_event, data) {
+    if (`_${data.day}` != clicked_day) {
+        d3.selectAll(`.graph_date._${data.day}`).style('fill', '#59FFC6')
+        d3.selectAll(`.graph_line._${data.day}`).style('stroke', '#59FFC6')
+    }
+
+}
+
+function handleDateOut(mouse_event, data) {
+    if (`_${data.day}` != clicked_day) {
+        d3.selectAll(`.graph_date._${data.day}`).style('fill', '#FFA34C')
+        d3.selectAll(`.graph_line._${data.day}`).style('stroke', '#FFA34C')
+    }
 
 }
 
