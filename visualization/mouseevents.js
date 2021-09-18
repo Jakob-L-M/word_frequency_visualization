@@ -32,12 +32,14 @@ function handleMouseOver(mouse_event, data) {
     // #15DB95 accent color from pallet
     if (`_${data.word}` != clicked_word) {
         d3.selectAll(`._${data.word}`).style('fill', '#FFA34C')
+        document.getElementById('word_preview').innerHTML = data.word
     }
 }
 
 function handleMouseOut(mouse_event, data) {
     if (`_${data.word}` != clicked_word) {
         d3.selectAll(`._${data.word}`).style('fill', data.color)
+        document.getElementById('word_preview').innerHTML = ""
     }
 }
 

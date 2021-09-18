@@ -220,3 +220,14 @@ body {
     font-family: 'Ubuntu', sans-serif;
     text-anchor: middle;
 }
+
+#word_preview {
+    position: absolute;
+    top: 83%;
+    left: 3%;
+    text-align: center;
+    width: 57%;
+    font-family: 'Ubuntu', sans-serif;
+    color: #FFA34C;
+    font-size: 2vw;
+}
