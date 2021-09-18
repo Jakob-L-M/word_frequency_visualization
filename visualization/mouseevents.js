@@ -33,7 +33,6 @@ function handleMouseOver(mouse_event, data) {
     if (`_${data.word}` != clicked_word) {
         d3.selectAll(`._${data.word}`).style('fill', '#FFA34C')
     }
-    console.log(data.word)
 }
 
 function handleMouseOut(mouse_event, data) {

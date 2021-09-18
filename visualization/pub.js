@@ -1,4 +1,4 @@
-let loaded_data;
+var loaded_data;
 
 const angle_gap = 5;
 const rotation_angle = 0 * (Math.PI) / 180;

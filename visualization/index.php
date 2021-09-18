@@ -48,6 +48,11 @@
         <text id='day_lable'></text>
         <div id='day_word_cloud'></div>
     </div>
+
+    <?php
+		$sql = "INSERT INTO `corona_vis` (`IP`, `Browser`, `TIME`) VALUES ('" . $_SERVER['REMOTE_ADDR'] . "', '" . $_SERVER['HTTP_USER_AGENT'] . "', '" . round(microtime(true) * 1000) ."');";
+		$res = mysqli_query($conn, $sql);
+	?>
     
 </body>
 
