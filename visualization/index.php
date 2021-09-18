@@ -23,7 +23,8 @@
     <div id='graph'></div>
     <input id='slider' type="text" data-slider-handle="custom">
     <text id='date_range'></text>
-    <text id='word_preview'>asdasd</text>
+    <button id='hints'>Show Hints</button>
+    <text id='word_preview'></text>
     <div id='detail_words'>
         <text id="word_lable"></text>
         <div id='appearance'>
