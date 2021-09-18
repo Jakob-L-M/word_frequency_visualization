@@ -40,65 +40,50 @@ body {
     left: 6%;
 }
 
-
-#slider .slider-selection {
-    background: #4073FF;
+.slider-track-low, .slider-track-high {
+    height: 5%;
+    top: 47.5%;
+    background: #4d4d4d;
     border-radius: 4px;
     position: absolute;
 }
-
-#slider .slider-track-low {
-    display: none;
 }
 
 .slider {
     display: inline-block;
     vertical-align: middle;
     position: relative;
-  }
-  
-.slider-track {
-height: 3px;
-width: 100%;
-margin-top: -2px;
-top: 50%;
-left: 0px;
-right: 0px;
 }
+  
 
 .slider-selection{
-height: 100%;
-top: 0;
-bottom: 0;
-}
-
-.slider-track {
-background-color: rgb(44, 47, 49);
-border-radius: 2px;
-position: absolute;
-cursor: pointer;
+    height: 10%;
+    top: 45%;
+    background: #4073FF;
+    border-radius: 4px;
+    position: absolute;
 }
 
 .slider-handle {
-position: absolute;
-top: 39.55%;
-width: 20px;
-height: 1%;
+    position: absolute;
+    top: 39.55%;
+    width: 20px;
+    height: 1%;
 }
 
 .slider-handle:hover {
-cursor: pointer;
+    cursor: pointer;
 }
 
 .slider-handle.custom::before {
-line-height: 20px;
-font-size: 30px;
-content: '\25EF';
-color: #4073FF;
-text-anchor: middle;
-background: rgb(44, 47, 49);
-border-radius: 15px;
-margin-left: -15px;
+    line-height: 20px;
+    font-size: 30px;
+    content: '\25EF';
+    color: #4073FF;
+    text-anchor: middle;
+    background: rgb(44, 47, 49);
+    border-radius: 15px;
+    margin-left: -15px;
 }
 
 .tooltip {
@@ -236,4 +221,3 @@ margin-left: -15px;
     font-family: 'Ubuntu', sans-serif;
     text-anchor: middle;
 }
-
