@@ -17,13 +17,14 @@
     <script language="javascript" type="text/javascript" src="lib/d3.layout.cloud.js"></script>
     <script language="javascript" type="text/javascript" src="mouseevents.js" defer></script>
     <script language="javascript" type="text/javascript" src="pub.js" defer></script>
+    <script language="javascript" type="text/javascript" src="hints.js"></script>
     <link rel="stylesheet" href="style.css">
 
 <body>
     <div id='graph'></div>
     <input id='slider' type="text" data-slider-handle="custom">
     <text id='date_range'></text>
-    <button id='hints'>Show Hints</button>
+    <button id='hints' onclick='show_hint()'>HINTS</button>
     <text id='word_preview'></text>
     <div id='detail_words'>
         <text id="word_lable"></text>
@@ -50,7 +51,6 @@
         <text id='day_lable'></text>
         <div id='day_word_cloud'></div>
     </div>
-
     <?php
 		$sql = "INSERT INTO `corona_vis` (`IP`, `Browser`, `TIME`) VALUES ('" . $_SERVER['REMOTE_ADDR'] . "', '" . $_SERVER['HTTP_USER_AGENT'] . "', '" . round(microtime(true) * 1000) ."');";
 		$res = mysqli_query($conn, $sql);

@@ -137,7 +137,7 @@ body {
     left: 0%;
     width: 25%;
     height: 80%;
-    box-shadow: 0px 0px 15px 5px #4073FF;
+    box-shadow: 0px 0px 0px 3px #4073FF;
     border-radius: 10px;
 }
 #detail_words #appearance #a_most{
@@ -146,7 +146,7 @@ body {
     left: 37.5%;
     width: 25%;
     height: 80%;
-    box-shadow: 0px 0px 15px 5px #4073FF;
+    box-shadow: 0px 0px 0px 3px #4073FF;
     border-radius: 10px;
 }
 #detail_words #appearance #a_last{
@@ -155,7 +155,7 @@ body {
     left: 75%;
     width: 25%;
     height: 80%;
-    box-shadow: 0px 0px 15px 5px #4073FF;
+    box-shadow: 0px 0px 0px 3px #4073FF;
     border-radius: 10px;
 }
 
@@ -230,4 +230,30 @@ body {
     font-family: 'Ubuntu', sans-serif;
     color: #FFA34C;
     font-size: 2vw;
+}
+
+#hints {
+    position: absolute;
+    left: 90%;
+    height: 3%;
+    top: 1%;
+    background: none;
+    box-shadow: 0px 0px 0px 3px #4073FF;
+    border-radius: 10px;
+    font-family: 'Ubuntu', sans-serif;
+    color: #FFA34C;
+    font-size: 1.5vh;
+}
+
+.hint {
+    width: 20%;
+    position: absolute;
+    left: 65%;
+    color: #4073FF;
+    font-family: 'Ubuntu', sans-serif;
+    font-size: 2.5vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
 }

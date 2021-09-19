@@ -46,6 +46,8 @@ function handleMouseOut(mouse_event, data) {
 
 function handleMouseClick(mouse_event, data) {
 
+    hide_hint();
+
     document.getElementById('word_preview').innerHTML = ""
 
     document.getElementById('detail_words').style.visibility = 'visible'
@@ -102,6 +104,9 @@ function handleMouseClick(mouse_event, data) {
 
 
 function handleDateClick(mouse_event, data) {
+    
+    hide_hint();
+    
     let day = data.day
 
     document.getElementById('detail_words').style.visibility = 'hidden'
