@@ -1,7 +1,7 @@
 # Word Frequency Visualization
 This is the project for my bachelor thesis.
 
-The finished Project can be viewed [here](corona.j-l-m.eu). The website was build and tested using Google Chrome.For my example visualization I am using Twitter Data of German news agencies. All Tweets will be filtered by corona keywords.
+The finished Project can be viewed [here](https://www.corona.j-l-m.eu). The website was build and tested using Google Chrome.For my example visualization I am using Twitter Data of German news agencies. All Tweets will be filtered by corona keywords.
 
 In general the whole project can be used with your own dataset. Alternatively Twitter data can be used with other key- and stopwords. Even though my example is using german Tweets, the code supports 20+ Languages.
 
