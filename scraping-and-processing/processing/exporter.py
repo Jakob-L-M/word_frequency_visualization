@@ -64,9 +64,9 @@ def export_words(data, path):
 
 
 def export(Category):
-    '''
+    """
     data: [{'day': <>, 'words': [<>], 'weights': [<>]]
-    '''
+    """
     start_date = str(min(Category.data['date']))[:10]
     data = Category.analysed_data
     path = Category.path
