@@ -263,3 +263,18 @@ function update_graph(start, end) {
   }
 
 }
+
+var modal = document.getElementById("about_modal");
+var btn = document.getElementById("about");
+var span = document.getElementsByClassName("close")[0];
+btn.onclick = function() {
+  modal.style.display = "block";
+}
+span.onclick = function() {
+  modal.style.display = "none";
+}
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}

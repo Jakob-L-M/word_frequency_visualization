@@ -51,6 +51,30 @@
         <text id='day_lable'></text>
         <div id='day_word_cloud'></div>
     </div>
+
+    <button id="about">About</button>
+    <div id="about_modal" class="modal">
+        <div class="modal-content">
+          <span class="close">&times;</span>
+          <span style="white-space: pre-line">This is the project for my bachelor thesis.
+
+        The website was build and tested using Google Chrome. For my example visualization I am using Twitter Data of German news agencies. All Tweets will be filtered by corona keywords.
+
+        In general the whole project can be used with your own dataset. Alternatively Twitter data can be used with other key- and stopwords. Even though my example is using german Tweets, the code supports 20+ Languages.
+
+        All Textdata is tagged with a timestamp. Im using TF-IDF the calculate word relevance by day. We then smooth relevance by weeks. The final visualization shows radial stacked timelines for the different words. The User is able to select a date range and interact with the graph by clicking on words or dates.
+
+        All code available at <a href="https://github.com/Jakob-L-M/word_frequency_visualization" target="_blank">my github repo</a>.
+
+        Request: request@*
+        Contact: contact@*
+
+        *: j-l-m.eu
+
+        <a href="https://www.j-l-m.eu/impressum.html" target="_blank">Impressum – Legal Notice</a>
+        </span>
+        </div>
+      </div>
     <?php
 		$sql = "INSERT INTO `corona_vis` (`IP`, `Browser`, `TIME`) VALUES ('" . $_SERVER['REMOTE_ADDR'] . "', '" . $_SERVER['HTTP_USER_AGENT'] . "', '" . round(microtime(true) * 1000) ."');";
 		$res = mysqli_query($conn, $sql);
