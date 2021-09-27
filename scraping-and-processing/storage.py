@@ -123,7 +123,7 @@ class Storage:
 
         with open(self.path + name + '/config.json', 'x') as f:
             json.dump({'start_date': '2000-01-01', 'end_date': '2001-01-01',
-                      'day_smoothing': 3, 'k': 15}, f)
+                      'day_smoothing': 3, 'k': 15, 'ngrams': [1,1]}, f)
         f.close()
 
 
