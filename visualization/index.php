@@ -24,7 +24,7 @@
     <div id='graph'></div>
     <input id='slider' type="text" data-slider-handle="custom">
     <text id='date_range'></text>
-    <button id='hints' onclick='show_hint()'>HINTS</button>
+    <button id='hints' onclick='show_hint()'>Hints</button>
     <text id='word_preview'></text>
     <div id='detail_words'>
         <text id="word_lable"></text>

@@ -5,13 +5,13 @@ function show_hint() {
 
     if (!hint_generated) {
         var first_hint = document.createElement('p')
-        first_hint.innerHTML = "Each ring in the graph represents a word. The arcs show us at what days the words were relevant. You can hover over them and click them to get a detailed view for the specific word."
+        first_hint.innerHTML = "Each ring in the graph represents a word. The arcs show us at what days the words were relevant. You can hover over them and click to get a detailed view for the specific word."
         first_hint.classList.add('hint');
         first_hint.style.top = "15%"
         document.body.append(first_hint)
 
         var second_hint = document.createElement('p')
-        second_hint.innerHTML = "You can also hover and click a specific date. This will revile a word cloud showing you the most relevant words on that day."
+        second_hint.innerHTML = "You can also hover and click a specific date. This will reveal a word cloud showing you the most relevant words on that day."
         second_hint.classList.add('hint');
         second_hint.style.top = "40%"
         second_hint.style.color = "#FFA34C"
