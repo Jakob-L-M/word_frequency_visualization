@@ -1,7 +1,3 @@
-<?php
-    include_once 'lib/dbh.php'
-?>
-
 <!DOCTYPE html>
 
 <head>
@@ -12,13 +8,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap" rel="stylesheet">
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script language="javascript" type="text/javascript" src="lib/bootstrap-slider.min.js"></script>
-    <script language="javascript" type="text/javascript" src="utils.js"></script>
-    <script language="javascript" type="text/javascript" src="lib/d3.layout.cloud.js"></script>
-    <script language="javascript" type="text/javascript" src="mouseevents.js" defer></script>
-    <script language="javascript" type="text/javascript" src="pub.js" defer></script>
-    <script language="javascript" type="text/javascript" src="hints.js"></script>
-    <link rel="stylesheet" href="style.css">
+    <script language="javascript" type="text/javascript" src="word-frequency-vis/lib/bootstrap-slider.min.js"></script>
+    <script language="javascript" type="text/javascript" src="word-frequency-vis/utils.js"></script>
+    <script language="javascript" type="text/javascript" src="word-frequency-vis/lib/d3.layout.cloud.js"></script>
+    <script language="javascript" type="text/javascript" src="word-frequency-vis/mouseevents.js" defer></script>
+    <script language="javascript" type="text/javascript" src="word-frequency-vis/pub.js" defer></script>
+    <script language="javascript" type="text/javascript" src="word-frequency-vis/hints.js"></script>
+    <link rel="stylesheet" href="word-frequency-vis/style.css">
 
 <body>
     <div id='graph'></div>
@@ -31,17 +27,17 @@
         <div id='appearance'>
 
             <div id='a_first'>
-                <text class="detail_text">First</text>
+                <text class="detail_text">First:</text>
                 <text id="dt_first" class="detail_date"></text>
             </div>
 
             <div id='a_most'>
-                <text class="detail_text">Most</text>
+                <text class="detail_text">Most:</text>
                 <text id="dt_most" class="detail_date"></text>
             </div>
 
             <div id='a_last'>
-                <text class="detail_text">Last</text>
+                <text class="detail_text">Last:</text>
                 <text id="dt_last" class="detail_date"></text>
             </div>
         </div>
@@ -66,20 +62,15 @@
 
         All code available at <a href="https://github.com/Jakob-L-M/word_frequency_visualization" target="_blank">my github repo</a>.
 
-        Request: request@*
-        Contact: contact@*
+        Contact: me@*
 
-        *: j-l-m.eu
+        *: jakob-l-m.de
 
-        <a href="https://www.j-l-m.eu/impressum.html" target="_blank">Impressum – Legal Notice</a>
+        <a href="https://www.jakob-l-m.de/impressum.html" target="_blank">Impressum – Legal Notice</a>
         </span>
         </div>
       </div>
-    <?php
-		$sql = "INSERT INTO `corona_vis` (`IP`, `Browser`, `TIME`) VALUES ('" . $_SERVER['REMOTE_ADDR'] . "', '" . $_SERVER['HTTP_USER_AGENT'] . "', '" . round(microtime(true) * 1000) ."');";
-		$res = mysqli_query($conn, $sql);
-	?>
-    
+
 </body>
 
 </html>
