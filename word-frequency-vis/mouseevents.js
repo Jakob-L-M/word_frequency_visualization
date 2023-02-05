@@ -78,7 +78,7 @@ function handleMouseClick(mouse_event, data) {
         document.getElementById("dt_first").innerHTML = get_date(data.days[0][0])
         document.getElementById("dt_last").innerHTML = get_date(data.days[data.days.length - 1][1] - 1)
 
-        $.getJSON(`/data/${category}/words/${word}.json`, function (day_w) {
+        $.getJSON(`word-frequency-vis/data/${category}/words/${word}.json`, function (day_w) {
 
             let plot_data = [];
             // unpacking day array
@@ -112,7 +112,7 @@ function handleDateClick(mouse_event, data) {
     document.getElementById('detail_words').style.visibility = 'hidden'
     document.getElementById('detail_day').style.visibility = 'visible'
     document.getElementById('day_lable').innerHTML = get_date(day)
-    $.getJSON(`/data/${category}/days/${day}.json`, function (json_data) {
+    $.getJSON(`word-frequency-vis/data/${category}/days/${day}.json`, function (json_data) {
 
         let words = []
         for (let i=0; i < json_data.w.length; i++) {

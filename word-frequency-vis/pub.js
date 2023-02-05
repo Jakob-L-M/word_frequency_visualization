@@ -69,7 +69,7 @@ const arcs = vis.append('g').attr('id', 'arcs');
 
 
 // main creation
-$.getJSON(`/data/${category}/main.json`, function (data) {
+$.getJSON(`word-frequency-vis/data/${category}/main.json`, function (data) {
 
   loaded_data = data.data;
 
