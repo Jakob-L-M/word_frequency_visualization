@@ -78,7 +78,7 @@ class Storage:
 
                     # extracting all wanted data
                     dic['date'] = pd.to_datetime(dt)
-                    dic['text'] = temp['content']
+                    dic['text'] = temp['rawContent']
                     dic['id'] = temp['id']
                     dic['user'] = temp['user']['username']
 
